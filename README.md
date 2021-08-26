@@ -1,2 +1,1 @@
-# omnisynth-gui
-GUI for the OmniSynth framework.
+# Source code for GUI
