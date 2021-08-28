@@ -10,9 +10,7 @@ Config.set('postproc', 'double_tap_time', '800')
 ########################################################
 import os, sys
 import subprocess
-currentdir = os.path.dirname(os.path.realpath(__file__))
-parentdir = os.path.dirname(currentdir)
-sys.path.append(parentdir)
+
 ########################################################
 DIVISOR = 0
 from sys import platform
@@ -53,8 +51,12 @@ import matplotlib.pyplot as plt
 # used for triggering events
 from kivy.clock import Clock
 
-from main import Omni
-OmniSynth = Omni()
+import omnisynth
+import inspect
+from omnisynth import omni
+OmniSynth = omni.Omni()
+OmniSynthPath = inspect.getfile(omnisynth).replace("\\", "/").replace("__init__.py","")
+
 
 from kivy.core.window import Window
 #Window.show_cursor = False
@@ -90,7 +92,7 @@ class MyScreens(Screen):
     def screenSel(self, screenName):
         sm.current = screenName
     def toneSel(self, tone):
-        OmniSynth.synth_sel(tone, parentdir)
+        OmniSynth.synth_sel(tone, OmniSynthPath)
     def exitSel(self, *args):
         OmniSynth.exit_sel()
         exit()
@@ -99,7 +101,7 @@ class MyScreens(Screen):
 class ToneButton(Button):
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos):
-            OmniSynth.synth_sel(self.text, parentdir)
+            OmniSynth.synth_sel(self.text, OmniSynthPath)
             OmniSynth.patchIndex = OmniSynth.patchListIndex[self.text]
             self.background_color = [0, 85, 255, 1]
             if touch.is_double_tap:
@@ -121,10 +123,10 @@ class LedButton(Button):
         if self.collide_point(*touch.pos):
             self.background_color = [0, 85, 255, 1]
             if self.active:
-                OmniSynth.pattern_sel(self.text, 'stop', parentdir)
+                OmniSynth.pattern_sel(self.text, 'stop', OmniSynthPath)
                 self.active = False
             else:
-                OmniSynth.pattern_sel(self.text, 'start', parentdir)
+                OmniSynth.pattern_sel(self.text, 'start', OmniSynthPath)
                 self.active = True
     def on_touch_up(self, touch):
         if self.collide_point(*touch.pos):
@@ -164,13 +166,13 @@ class UpButton(Button):
                 slotTwo.text = str(patchList[0])
                 slotThree.text = str(patchList[1])
                 OmniSynth.patchIndex = 0
-                OmniSynth.synth_sel(slotTwo.text, parentdir)
+                OmniSynth.synth_sel(slotTwo.text, OmniSynthPath)
             else:
                 slotThree.text = str(patchList[OmniSynth.patchIndex])
                 OmniSynth.patchIndex -= 1
                 slotTwo.text = str(patchList[OmniSynth.patchIndex])
                 slotOne.text = str(patchList[OmniSynth.patchIndex - 1])
-                OmniSynth.synth_sel(slotTwo.text, parentdir)
+                OmniSynth.synth_sel(slotTwo.text, OmniSynthPath)
 class DownButton(Button):
     def on_release(self, *kwargs):
         self.moveDown()
@@ -183,7 +185,7 @@ class DownButton(Button):
                 slotThree.text = str(patchList[OmniSynth.patchIndex + 1])
             else:
                 slotThree.text = ''
-            OmniSynth.synth_sel(slotTwo.text, parentdir)
+            OmniSynth.synth_sel(slotTwo.text, OmniSynthPath)
 
 
 class BootScreen(MyScreens):
@@ -227,24 +229,24 @@ class MainGUI(MyScreens):
             self.patchSelectListLayout.add_widget(slotTwo)
             self.patchSelectListLayout.add_widget(slotThree)
             self.firstTime = False
-            OmniSynth.synth_sel(slotTwo.text, parentdir)
+            OmniSynth.synth_sel(slotTwo.text, OmniSynthPath)
         else:
             if OmniSynth.patchIndex == 0:
                 slotOne.text = ''
                 slotTwo.text = patchList[0]
                 slotThree.text = patchList[1]
-                OmniSynth.synth_sel(slotTwo.text, parentdir)
+                OmniSynth.synth_sel(slotTwo.text, OmniSynthPath)
             else:
                 if OmniSynth.patchIndex == OmniSynth.numPatch-1:
                     slotOne.text = patchList[OmniSynth.patchIndex - 1]
                     slotTwo.text = patchList[OmniSynth.patchIndex]
                     slotThree.text = ''
-                    OmniSynth.synth_sel(slotTwo.text, parentdir)
+                    OmniSynth.synth_sel(slotTwo.text, OmniSynthPath)
                 else:
                     slotOne.text = patchList[OmniSynth.patchIndex - 1]
                     slotTwo.text = patchList[OmniSynth.patchIndex]
                     slotThree.text = patchList[OmniSynth.patchIndex + 1]
-                    OmniSynth.synth_sel(slotTwo.text, parentdir)
+                    OmniSynth.synth_sel(slotTwo.text, OmniSynthPath)
 
 class PatchPage1(MyScreens):
     def on_pre_enter(self):
@@ -743,17 +745,16 @@ class OmniApp(App):
         pattern37to48 = []
    
      #   self.use_kivy_settings = False
-        sc_main = parentdir + "/dsp/main.scd"
+        sc_main = OmniSynthPath + "dsp/main.scd"
         subprocess.Popen(["sclang", sc_main])
-        
-        OmniSynth.sc_compile("patches", parentdir) # compiles all synthDefs.
-        OmniSynth.synth_sel("tone1", parentdir) # selects first patch.
+        OmniSynth.sc_compile("patches", OmniSynthPath) # compiles all synthDefs.
+        OmniSynth.synth_sel("tone1", OmniSynthPath) # selects first patch.
 
         sm = OmniGui(transition=NoTransition())
         event = Clock.schedule_interval(OmniSynth.open_stream, .001)
         # Iterate through patches to initialize patch selection screens
         iterator = 0
-        for patch_name in os.listdir(parentdir + '/dsp/patches'):
+        for patch_name in os.listdir(OmniSynthPath + 'dsp/patches'):
             if patch_name.endswith('.scd'):
                 patchList.append(patch_name.strip('.scd'))
                 OmniSynth.patchListIndex[patch_name.strip('.scd')] = iterator
@@ -779,7 +780,7 @@ class OmniApp(App):
                     patch1to12 = tempPatchList
         # Same thing for patterns
         iterator = 0
-        for pattern_name in os.listdir(parentdir + '/dsp/patterns/songs/song1'):
+        for pattern_name in os.listdir(OmniSynthPath + 'dsp/patterns/songs/song1'):
             if pattern_name.endswith('.scd'):
                 patternList.append(pattern_name.strip('.scd'))
                 OmniSynth.patternListIndex[pattern_name.strip('.scd')] = iterator
@@ -814,7 +815,7 @@ class OmniApp(App):
             'stringexample': 'some_string',
             'pathexample': '/some/path'})
     def build_settings(self, settings):
-        settings.add_json_panel('Settings Template', self.config, filename = parentdir + '/gui/settings.json')
+        settings.add_json_panel('Settings Template', self.config, filename = OmniSynthPath + '/gui/settings.json')
 
     def on_config_change(self, config, section, key, value):
         print(config, section, key, value)
