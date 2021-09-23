@@ -728,9 +728,6 @@ class OmniGui(ScreenManager):
         #selecting the Main GUI screen for startup
         self.current = 'BootScreen'
         
-
-
-
 class OmniApp(App):
     def build(self):
         global sm, patch1to12, patch13to24, patch25to36, patch37to48, pattern1to12, pattern13to24, pattern25to36, pattern37to48
@@ -820,6 +817,3 @@ class OmniApp(App):
     def on_config_change(self, config, section, key, value):
         print(config, section, key, value)
 
-if __name__ == "__main__":
-    OmniApp().run()
-    
