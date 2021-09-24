@@ -8,10 +8,6 @@ Config.set('postproc', 'double_tap_time', '800')
 # Enables referencing to packages in parent directory  #
 #   Discovered this method online at codeolives.com    #
 ########################################################
-import os, sys
-import subprocess
-
-########################################################
 DIVISOR = 0
 from sys import platform
 if platform == "linux" or platform == "linux2":
@@ -23,24 +19,15 @@ elif platform == "darwin":
 elif platform == "win32":
     DIVISOR = 8
 
-import kivy
-
-import numpy as np
-
-from kivy.app import App
 from kivy.uix.image import Image
 from kivy.graphics import Rotate
-from kivy.properties import NumericProperty
 from kivy.graphics.context_instructions import PopMatrix, PushMatrix
 from kivy.uix.label import Label
-from kivy.uix.widget import Widget
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.anchorlayout import AnchorLayout
 from kivy.uix.gridlayout import GridLayout
-from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.relativelayout import RelativeLayout
-from kivy.uix.screenmanager import NoTransition
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.slider import Slider
 
@@ -727,93 +714,3 @@ class OmniGui(ScreenManager):
         super(OmniGui, self).__init__(**kwargs)
         #selecting the Main GUI screen for startup
         self.current = 'BootScreen'
-        
-class OmniApp(App):
-    def build(self):
-        global sm, patch1to12, patch13to24, patch25to36, patch37to48, pattern1to12, pattern13to24, pattern25to36, pattern37to48
-        patch1to12 = []
-        patch13to24 = []
-        patch25to36 = []
-        patch37to48 = []
-
-        pattern1to12 = []
-        pattern13to24 = []
-        pattern25to36 = []
-        pattern37to48 = []
-   
-     #   self.use_kivy_settings = False
-        sc_main = OmniSynthPath + "dsp/main.scd"
-        subprocess.Popen(["sclang", sc_main])
-        OmniSynth.sc_compile("patches", OmniSynthPath) # compiles all synthDefs.
-        OmniSynth.synth_sel("tone1", OmniSynthPath) # selects first patch.
-
-        sm = OmniGui(transition=NoTransition())
-        event = Clock.schedule_interval(OmniSynth.open_stream, .001)
-        # Iterate through patches to initialize patch selection screens
-        iterator = 0
-        for patch_name in os.listdir(OmniSynthPath + 'dsp/patches'):
-            if patch_name.endswith('.scd'):
-                patchList.append(patch_name.strip('.scd'))
-                OmniSynth.patchListIndex[patch_name.strip('.scd')] = iterator
-                iterator += 1
-        tempPatchList = patchList
-        tempPatchList = np.sort(np.array(patchList)).tolist()
-        num_patches = len(patchList)
-        if num_patches > 36:
-            patch1to12 = tempPatchList[0:12]
-            patch13to24 = tempPatchList[12:24]
-            patch25to36 = tempPatchList[24:36]
-            patch37to48 = tempPatchList[36:]
-        else:
-            if num_patches > 24:
-                patch1to12 = tempPatchList[0:12]
-                patch13to24 = tempPatchList[12:24]
-                patch25to36 = tempPatchList[24:]
-            else:
-                if num_patches > 12:
-                    patch1to12 = tempPatchList[0:12]
-                    patch13to24 = tempPatchList[12:]
-                else:
-                    patch1to12 = tempPatchList
-        # Same thing for patterns
-        iterator = 0
-        for pattern_name in os.listdir(OmniSynthPath + 'dsp/patterns/songs/song1'):
-            if pattern_name.endswith('.scd'):
-                patternList.append(pattern_name.strip('.scd'))
-                OmniSynth.patternListIndex[pattern_name.strip('.scd')] = iterator
-                iterator += 1
-        tempPatternList = patternList
-        tempPatternList = np.sort(np.array(patternList)).tolist()
-
-        num_patterns = len(patternList)
-        if num_patterns > 36:
-            pattern1to12 = tempPatternList[0:12]
-            pattern13to24 = tempPatternList[12:24]
-            pattern25to36 = tempPatternList[24:36]
-            pattern37to48 = tempPatternList[36:]
-        else:
-            if num_patterns > 24:
-                pattern1to12 = tempPatternList[0:12]
-                pattern13to24 = tempPatternList[12:24]
-                pattern25to36 = tempPatternList[24:]
-            else:
-                if num_patterns > 12:
-                    pattern1to12 = tempPatternList[0:12]
-                    pattern13to24 = tempPatternList[12:]
-                else:
-                    pattern1to12 = tempPatternList
-        return sm
-
-    def build_config(self, config):
-        config.setdefaults('example', {
-            'boolexample': True,
-            'numericexample': 10,
-            'optionsexample': 'option2',
-            'stringexample': 'some_string',
-            'pathexample': '/some/path'})
-    def build_settings(self, settings):
-        settings.add_json_panel('Settings Template', self.config, filename = OmniSynthPath + '/gui/settings.json')
-
-    def on_config_change(self, config, section, key, value):
-        print(config, section, key, value)
-
