@@ -4,7 +4,7 @@ from kivy.graphics import Rotate
 
 class IndicatorImage(Image):
     def __init__(self, name):
-        super().__init__()
+        super().__init__(source = '../../../assets/indicator.png')
         self.knob_name = name
 
         # When user touches a knob and drags, that one should be updated

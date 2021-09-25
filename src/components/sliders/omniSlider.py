@@ -3,7 +3,16 @@ from kivy.uix.slider import Slider
 
 class OmniSlider(Slider):
     def __init__(self, name):
-        super().__init__()
+        super().__init__(
+            background_disabled_vertical = 'atlas://data/images/defaulttheme/sliderv_background',
+            cursor_disabled_image = '../../../assets/sliderV3.png',
+            orientation = 'vertical',
+            size_hint_y = 0.75,
+            size_hint_x = 0.25,
+            pos_hint = {'x':0.5, 'y': 0.25},
+            range = [0,127],
+            step = 1
+        )
         self.slider_name = name
         self.hold_value = 0
 

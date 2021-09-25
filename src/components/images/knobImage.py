@@ -3,7 +3,7 @@ from kivy.uix.image import Image
 
 class KnobImage(Image):
     def __init__(self, name):
-        super().__init__()
+        super().__init__(source = '../../../assets/knob1.png')
         self.knob_name = name
   
     def on_touch_down(self, touch):

@@ -3,6 +3,12 @@ from constants import OMNISYNTH_PATH
 import os
 import numpy as np
 
+# SCDMatrix
+#
+# SCDMatrix is a class that takes a flat list of SCD filenames
+# and creates 2 dimensional matrix, with a max of 12 filenames
+# per row and at most 4 rows total.
+
 class SCDType(enum.Enum):
     patch = 1
     pattern = 2
@@ -10,11 +16,6 @@ class SCDType(enum.Enum):
 def is_valid_scd_file(filename):
   return filename.endswith('.scd')
 
-# SCDMatrix
-#
-# SCDMatrix is a class that takes a flat list of SCD filenames
-# and creates 2 dimensional matrix, with a max of 12 filenames
-# per row and at most 4 rows total.
 class SCDMatrix:
     MATRIX_WIDTH = 12
     MATRIX_LENGTH = 4

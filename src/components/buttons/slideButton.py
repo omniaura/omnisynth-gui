@@ -3,7 +3,7 @@ from kivy.uix.button import Button
 
 class SlideButton(Button):
     def __init__(self, name):
-        super().__init__()
+        super().__init__(text = name, size_hint_x = 0.75, size_hint_y = 0.1, pos_hint = {'x':0.17, 'y':0})
         self.button_name = name
 
     def on_touch_down(self, touch):

@@ -11,7 +11,8 @@ from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.relativelayout import RelativeLayout
 
-class Tone5Page(BaseScreen):
+# The knob value page
+class KnobValPage(BaseScreen):
     def __init__(self):
         super().__init__()
         self.slideList = []
@@ -37,28 +38,28 @@ class Tone5Page(BaseScreen):
         sustain_knob_set = RelativeLayout(size_hint_y = 0.85)
         release_knob_set = RelativeLayout(size_hint_y = 0.85)
 
-        lpf_knob = KnobImage('lpf', source = 'knobV1.png')
-        lpf_indicator = IndicatorImage('lpf', source = 'indicator.png')
+        lpf_knob = KnobImage('lpf')
+        lpf_indicator = IndicatorImage('lpf')
         lpf_label = Label(text='lpf', size_hint = [1,0.15])
 
-        hpf_knob = KnobImage('hpf', source = 'knobV1.png')
-        hpf_indicator = IndicatorImage('hpf', source = 'indicator.png')
+        hpf_knob = KnobImage('hpf')
+        hpf_indicator = IndicatorImage('hpf')
         hpf_label = Label(text='hpf', size_hint = [1,0.15])
 
-        attack_knob = KnobImage('attack', source = 'knobV1.png')
-        attack_indicator = IndicatorImage('attack', source = 'indicator.png')
+        attack_knob = KnobImage('attack')
+        attack_indicator = IndicatorImage('attack')
         attack_label = Label(text='attack', size_hint = [1,0.15])
 
-        decay_knob = KnobImage('decay', source = 'knobV1.png')
-        decay_indicator = IndicatorImage('decay', source = 'indicator.png')
+        decay_knob = KnobImage('decay')
+        decay_indicator = IndicatorImage('decay')
         decay_label = Label(text='decay', size_hint = [1,0.15])
 
-        sustain_knob = KnobImage('sustain', source = 'knobV1.png')
-        sustain_indicator = IndicatorImage('sustain', source = 'indicator.png')
+        sustain_knob = KnobImage('sustain')
+        sustain_indicator = IndicatorImage('sustain')
         sustain_label = Label(text='sustain', size_hint = [1,0.15])
 
-        release_knob = KnobImage('release', source = 'knobV1.png')
-        release_indicator = IndicatorImage('release', source = 'indicator.png')
+        release_knob = KnobImage('release')
+        release_indicator = IndicatorImage('release')
         release_label = Label(text='release', size_hint = [1,0.15])
 
         # Filling the knob sets
@@ -76,37 +77,24 @@ class Tone5Page(BaseScreen):
         release_knob_set.add_widget(release_indicator)
 
         # Slider setup
-        lpf_slider = OmniSlider('lpf', background_disabled_vertical = 'atlas://data/images/defaulttheme/sliderv_background',
-                                cursor_disabled_image = 'sliderV3.png', orientation = 'vertical', size_hint_y = 0.75,
-                                size_hint_x = 0.25, pos_hint = {'x':0.5, 'y': 0.25}, range = [0,127], step = 1)
-        lpf_button = SlideButton('lpf', text = 'lpf', size_hint_x = 0.75, size_hint_y = 0.1, pos_hint = {'x':0.17, 'y':0})
+        lpf_slider = OmniSlider('lpf')
+        lpf_button = SlideButton('lpf')
         
-        hpf_slider = OmniSlider('hpf', background_disabled_vertical = 'atlas://data/images/defaulttheme/sliderv_background',
-                                cursor_disabled_image = 'sliderV3.png', orientation = 'vertical', size_hint_y = 0.75,
-                                size_hint_x = 0.25, pos_hint = {'x':0.5, 'y': 0.25}, range = [0,127], step = 1)
-        hpf_button = SlideButton('hpf', text = 'hpf', size_hint_x = 0.75, size_hint_y = 0.1, pos_hint = {'x':0.17, 'y':0})
+        hpf_slider = OmniSlider('hpf')
+        hpf_button = SlideButton('hpf')
         
-        attack_slider = OmniSlider('attack', background_disabled_vertical = 'atlas://data/images/defaulttheme/sliderv_background',
-                                cursor_disabled_image = 'sliderV3.png', orientation = 'vertical', size_hint_y = 0.75,
-                               size_hint_x = 0.25, pos_hint = {'x':0.5, 'y': 0.25}, range = [0,127], step = 1)
-        attack_button = SlideButton('attack', text = 'attack', size_hint_x = 0.75, size_hint_y = 0.1, pos_hint = {'x':0.17, 'y':0})
+        attack_slider = OmniSlider('attack')
+        attack_button = SlideButton('attack')
         
-        decay_slider = OmniSlider('decay', background_disabled_vertical = 'atlas://data/images/defaulttheme/sliderv_background',
-                                cursor_disabled_image = 'sliderV3.png', orientation = 'vertical', size_hint_y = 0.75,
-                                size_hint_x = 0.25, pos_hint = {'x':0.5, 'y': 0.25}, range = [0,127], step = 1)
-        decay_button = SlideButton('decay', text = 'decay', size_hint_x = 0.75, size_hint_y = 0.1, pos_hint = {'x':0.17, 'y':0})
+        decay_slider = OmniSlider('decay')
+        decay_button = SlideButton('decay')
         
-        sustain_slider = OmniSlider('sustain', background_disabled_vertical = 'atlas://data/images/defaulttheme/sliderv_background',
-                                cursor_disabled_image = 'sliderV3.png', orientation = 'vertical', size_hint_y = 0.75,
-                                size_hint_x = 0.25, pos_hint = {'x':0.5, 'y': 0.25}, range = [0,127], step = 1)
-        sustain_button = SlideButton('sustain', text = 'sustain', size_hint_x = 0.75, size_hint_y = 0.1, pos_hint = {'x':0.17, 'y':0})
+        sustain_slider = OmniSlider('sustain')
+        sustain_button = SlideButton('sustain')
         
-        release_slider = OmniSlider('release', background_disabled_vertical = 'atlas://data/images/defaulttheme/sliderv_background',
-                                cursor_disabled_image = 'sliderV3.png', orientation = 'vertical', size_hint_y = 0.75,
-                                size_hint_x = 0.25, pos_hint = {'x':0.5, 'y': 0.25}, range = [0,127], step = 1)
-        release_button = SlideButton('release', text = 'release', size_hint_x = 0.75, size_hint_y = 0.1, pos_hint = {'x':0.17, 'y':0})
+        release_slider = OmniSlider('release')
+        release_button = SlideButton('release')
         
-
         # Slider implementation
         lpf_layout.add_widget(lpf_slider)
         lpf_layout.add_widget(lpf_button)

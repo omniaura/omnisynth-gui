@@ -1,4 +1,4 @@
-from omniapp import OmniSynth, PatchList
+from omniapp import OmniSynth, PatchList, Slots
 from kivy.uix.button import Button
 
 from constants import OMNISYNTH_PATH

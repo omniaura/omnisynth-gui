@@ -8,6 +8,7 @@ from screens.baseScreen import BaseScreen
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.anchorlayout import AnchorLayout
 
+# The main, landing screen of the app
 class MainGUI(BaseScreen):
     def __init__(self):
         super().__init__()
