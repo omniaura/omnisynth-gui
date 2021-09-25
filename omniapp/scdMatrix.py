@@ -1,7 +1,6 @@
 import enum
-from constants import OMNISYNTH_PATH
+from omniapp.constants import OMNISYNTH_PATH
 import os
-import numpy as np
 
 # SCDMatrix
 #
@@ -24,9 +23,8 @@ class SCDMatrix:
         self.scd_type = scd_type
 
     def get_matrix(self):
-        files = filter(is_valid_scd_file, os.listdir(self.__get_scd_folder()))
-        scd_list = filter(is_valid_scd_file, files)
-        return np.array(scd_list).reshape(SCDMatrix.MATRIX_WIDTH, SCDMatrix.MATRIX_LENGTH)
+        files = list(filter(is_valid_scd_file, os.listdir(self.__get_scd_folder())))
+        return [files[i:i+12] for i in range(0, len(files), 12)]
 
     def __get_scd_folder(self):
         if self.scd_type == SCDType.patch:

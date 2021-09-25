@@ -1,4 +1,4 @@
-from screens.baseScreen import BaseScreen
+from main import BaseScreen
 from kivy.uix.gridlayout import GridLayout
 
 from components.buttons.screenNavButton import ScreenNavButton

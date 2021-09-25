@@ -1,9 +1,12 @@
-from omniapp import OmniSynth, ScreenManager
+from omniapp import OmniSynth
 from kivy.uix.button import Button
+from kivy.properties import ObjectProperty
 
 from constants import OMNISYNTH_PATH
 
 class ToneButton(Button):
+    screenmanager = ObjectProperty()
+
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos):
             OmniSynth.synth_sel(self.text, OMNISYNTH_PATH)
@@ -11,9 +14,9 @@ class ToneButton(Button):
             self.background_color = [0, 85, 255, 1]
             if touch.is_double_tap:
                 if self.text == 'tone5':
-                    ScreenManager.current = 'Tone5Page'
+                    self.screenmanager.current = 'Tone5Page'
                 else:
-                    ScreenManager.current = 'KnobValPage'
+                    self.screenmanager.current = 'KnobValPage'
 
     def on_touch_up(self, touch):
         if self.collide_point(*touch.pos):

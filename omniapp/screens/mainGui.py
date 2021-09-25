@@ -3,7 +3,7 @@ from omniapp import OmniSynth, PatchList, PatchMatrix, Slots
 from constants import OMNISYNTH_PATH
 from components.buttons.downButton import DownButton
 from components.buttons.upButton import UpButton
-from screens.baseScreen import BaseScreen
+from main import BaseScreen
 
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.anchorlayout import AnchorLayout

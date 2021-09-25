@@ -1,10 +1,10 @@
 # Defining all the screens for ScreenManager
+from main import BaseScreen
 from components.buttons.SlideButton import SlideButton
 from components.sliders.omniSlider import OmniSlider
 from components.images.indicatorImage import IndicatorImage
 from components.images.knobImage import KnobImage
 from omniapp import KnobCoords, OmniSynth
-from screens.baseScreen import BaseScreen
 
 from kivy.clock import Clock
 from kivy.uix.label import Label
