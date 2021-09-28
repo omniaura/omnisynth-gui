@@ -55,7 +55,7 @@ import omnisynth
 import inspect
 from omnisynth import omni
 OmniSynth = omni.Omni()
-OmniSynthPath = inspect.getfile(omnisynth).replace("\\", "/").replace("__init__.py","")
+OmniSynthPath = os.getcwd().replace('omnisynth-gui', 'omnisynth-dsp/').replace("\\", "/")
 
 
 from kivy.core.window import Window
@@ -745,7 +745,7 @@ class OmniApp(App):
         pattern37to48 = []
    
      #   self.use_kivy_settings = False
-        sc_main = OmniSynthPath + "dsp/main.scd"
+        sc_main = OmniSynthPath + "main.scd"
         subprocess.Popen(["sclang", sc_main])
         OmniSynth.sc_compile("patches", OmniSynthPath) # compiles all synthDefs.
         OmniSynth.synth_sel("tone1", OmniSynthPath) # selects first patch.
@@ -754,7 +754,7 @@ class OmniApp(App):
         event = Clock.schedule_interval(OmniSynth.open_stream, .001)
         # Iterate through patches to initialize patch selection screens
         iterator = 0
-        for patch_name in os.listdir(OmniSynthPath + 'dsp/patches'):
+        for patch_name in os.listdir(OmniSynthPath + 'patches'):
             if patch_name.endswith('.scd'):
                 patchList.append(patch_name.strip('.scd'))
                 OmniSynth.patchListIndex[patch_name.strip('.scd')] = iterator
@@ -780,7 +780,7 @@ class OmniApp(App):
                     patch1to12 = tempPatchList
         # Same thing for patterns
         iterator = 0
-        for pattern_name in os.listdir(OmniSynthPath + 'dsp/patterns/songs/song1'):
+        for pattern_name in os.listdir(OmniSynthPath + 'patterns/songs/song1'):
             if pattern_name.endswith('.scd'):
                 patternList.append(pattern_name.strip('.scd'))
                 OmniSynth.patternListIndex[pattern_name.strip('.scd')] = iterator
