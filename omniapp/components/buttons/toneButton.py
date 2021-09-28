@@ -4,13 +4,15 @@ from kivy.properties import ObjectProperty
 
 from constants import OMNISYNTH_PATH
 
+
 class ToneButton(Button):
     screenmanager = ObjectProperty()
 
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos):
-            OmniSynth.synth_sel(self.text, OMNISYNTH_PATH)
-            OmniSynth.patchIndex = OmniSynth.patchListIndex[self.text]
+            App.get_running_app().omni_instance.synth_sel(self.text, OMNISYNTH_PATH)
+            App.get_running_app().omni_instance.patchIndex = App.get_running_app(
+            ).omni.patchListIndex[self.text]
             self.background_color = [0, 85, 255, 1]
             if touch.is_double_tap:
                 if self.text == 'tone5':

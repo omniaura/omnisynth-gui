@@ -2,9 +2,10 @@ from kivy.graphics.context_instructions import PopMatrix, PushMatrix
 from kivy.uix.image import Image
 from kivy.graphics import Rotate
 
+
 class IndicatorImage(Image):
     def __init__(self, name):
-        super().__init__(source = '../../../assets/indicator.png')
+        super().__init__(source='../../../assets/indicator.png')
         self.knob_name = name
 
         # When user touches a knob and drags, that one should be updated
@@ -22,7 +23,7 @@ class IndicatorImage(Image):
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos):
             self.updateMe = True
-  
+
     # When the user releases from the screen, none of the knobs should update
     def on_touch_up(self, touch):
         self.updateMe = False

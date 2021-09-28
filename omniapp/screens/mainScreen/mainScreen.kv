@@ -1,0 +1,68 @@
+#:kivy 2.0.0
+#:include ../buttons/upButton.kv
+#:include ../buttons/downButton.kv
+<MainScreen@BaseScreen>:
+    name: 'MainScreen'
+    size_hint: 1,1
+    AnchorLayout:
+        anchor_x: 'left'
+        anchor_y: 'top'
+        
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: 2
+            padding: [1,1,1,1]
+            size_hint: 0.5, 0.4
+            Button:
+                id: Patch_selection
+                text: 'Synth Patch Selection'
+                size_hint: 1, 0.25
+                on_release: root.manager.current = 'PatchPage1'
+            Button:
+                id: Pattern_selection
+                text: 'LED Pattern Selection'
+                size_hint: 1, 0.25
+                on_release: root.manager.current = 'LedPage1'
+            Button:
+                id: SettingsBtn
+                text: 'Settings'
+                size_hint: 1, 0.25
+                on_release: app.open_settings()
+
+    AnchorLayout:
+        anchor_x: 'center'
+        anchor_y: 'bottom'
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint: 1, 0.6
+            Button:
+                text: 'Close Application'
+                size_hint: 1, 0.6
+                on_release: root.exitSel()
+
+    AnchorLayout:
+        id: 'top-right-corner'
+        anchor_x: 'right'
+        anchoy_y: 'top'
+
+        BoxLayout:
+            id: 'patch-select-layout'
+            orientation: 'horizontal'
+            size_hint: [0.499, 0.395]
+
+            BoxLayout:
+                id: 'patch-select-list-layout'
+                orientation: 'vertical'
+                size_hint: [0.67, 1]
+
+            BoxLayout:
+                id: 'patch-select-interface-layout'
+                orientation: 'vertical'
+                size_hint: [0.23, 1]
+
+                UpButton:
+                    text: 'Up'
+
+                DownButton:
+                    text: 'Down'
+        

@@ -1,0 +1,87 @@
+#:kivy 2.0.0
+#:include ../baseScreen/baseScreen.kv
+#:include ../../layouts/controlGroup.kv
+#:include ../../sliders/omniSlider.kv
+#:include ../../buttons/slideButton.kv
+<KnobValScreen@BaseScreen>:
+    name: 'KnobValScreen'
+    Label:
+        text: 'Knob Value Page'
+        pos_hint: {'x': 0.5 , 'y': 0.9}
+    Button:
+        text: 'Back'
+        size_hint_x: 0.1
+        size_hint_y: 0.1
+        pos_hint: {'x': 0.025, 'y': 0.05}
+        on_release: root.manager.current = 'MainGUI'
+    Button:
+        text: 'Map Mode'
+        size_hint_x: 0.1
+        size_hint_y: 0.1
+        pos_hint: {'x': 0.9, 'y':0}
+        on_release: root.learnMidi()
+
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint_y: 0.75
+        pos_hint: { 'x':0, 'y': 0.25 }
+
+        ControlGroup:
+            id: 'lpflayout'
+            name: 'LPF Layout'
+
+            OmniSlider:
+                name: 'LPF Slider'
+              
+            SlideButton:
+                name: 'LPF Button'
+
+        ControlGroup:
+            id: 'hpflayout'
+            name: 'HPF Layout'
+
+            OmniSlider:
+                name: 'HPF Slider'
+              
+            SlideButton:
+                name: 'HPF Button'
+          
+        ControlGroup:
+            id: 'attacklayout'
+            name: 'Attack Layout'
+
+            OmniSlider:
+                name: 'Attack Slider'
+              
+            SlideButton:
+                name: 'Attack Button'
+
+        ControlGroup:
+            id: 'decaylayout'
+            name: 'Decay Layout'
+
+            OmniSlider:
+                name: 'Decay Slider'
+              
+            SlideButton:
+                name: 'Decay Button'
+
+        ControlGroup:
+            id: 'sustainlayout'
+            name: 'Sustain Layout'
+
+            OmniSlider:
+                name: 'Sustain Slider'
+              
+            SlideButton:
+                name: 'Sustain Button'
+
+        ControlGroup:
+            id: 'releaselayout'
+            name: 'Release Layout'
+
+            OmniSlider:
+                name: 'Release Slider'
+              
+            SlideButton:
+                name: 'Release Button'
