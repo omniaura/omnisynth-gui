@@ -1,9 +1,5 @@
 #:kivy 2.0.0
-#:include ../baseScreen/baseScreen.kv
-#:include ../../layouts/controlGroup.kv
-#:include ../../sliders/omniSlider.kv
-#:include ../../buttons/slideButton.kv
-<KnobValScreen@BaseScreen>:
+<KnobValScreen>:
     name: 'KnobValScreen'
     Label:
         text: 'Knob Value Page'
@@ -13,7 +9,7 @@
         size_hint_x: 0.1
         size_hint_y: 0.1
         pos_hint: {'x': 0.025, 'y': 0.05}
-        on_release: root.manager.current = 'MainGUI'
+        on_release: root.manager.current = 'main_screen'
     Button:
         text: 'Map Mode'
         size_hint_x: 0.1

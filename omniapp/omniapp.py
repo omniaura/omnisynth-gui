@@ -6,21 +6,29 @@ from kivy.lang.builder import Builder
 
 import numpy as np
 
-from omniapp.omnigui import OmniGui
 from kivy.uix.screenmanager import NoTransition
 
 from kivy.clock import Clock
 from kivy.properties import DictProperty, ListProperty, ObjectProperty
 from kivy.uix.screenmanager import ScreenManager, Screen
-from scdMatrix import SCDMatrix, SCDType
-from screens.bootScreen.bootScreen import BootScreen
+from omniapp.scdMatrix import SCDMatrix, SCDType
+from omniapp.logger import Logger, LogLevel
+from omniapp.screens.bootScreen.bootScreen import BootScreen
+from omniapp.screens.mainScreen.mainScreen import MainScreen
 from omnisynth import omni
 from kivy.config import Config
 from kivy.uix.label import Label
+from kivy.lang import Builder
+from pathlib import Path
+from itertools import chain
+import os
+import datetime
 
 
-class OmniApp(App):
-    """The Kivy app that controls our process"""
+class Omni(ScreenManager):
+    """A Kivy ScreenManager that has properties
+    we need to persist throughout the manager's lifetime.
+    """
 
     omni_instance = ObjectProperty()
     slots = ListProperty()
@@ -29,6 +37,29 @@ class OmniApp(App):
     pattern_list = ListProperty()
     patch_matrix = ListProperty()
     patch_list = ListProperty()
+    logger = ObjectProperty()
+
+    def __init__(self, **kwargs):
+        super().__init__()
+
+        self.omni_instance = omni.Omni()
+
+
+class OmniApp(App):
+    """The Kivy app that controls our process"""
+
+    def __init__(self):
+        super().__init__()
+
+        # Initialize logger
+        # TODO: default to :warn,
+        #       but respect flags --debug (debug)
+        #       or --verbose (:everything), etc
+        self.logger = Logger()
+
+        # Build KV components
+        self.logger.log('Building .kv assets...')
+        self.__init_kivy_components()
 
     def build(self):
         """Responsible for:
@@ -37,38 +68,48 @@ class OmniApp(App):
         Initializing global parameters such as patch / pattern list, and knob coordinates
         """
 
-        # Initialize Kivy config
-        Config.set('kivy', 'keyboard_mode', 'system')
-        Config.set('postproc', 'double_tap_time', '800')
+        self.__init_kivy_config()
 
-        # initialize slot labels
-        self.slots = [
+        self.logger.log('Initializing screen manager...')
+        sm = Omni(transition=NoTransition())
+
+        self.logger.log('Initializing slot labels...')
+        sm.slots = [
             Label(size_hint=[1, 0.33], color=[1, 1, 50, 1]),
             Label(size_hint=[1, 0.33], color=[0, 85, 255, 1]),
             Label(size_hint=[1, 0.33], color=[1, 1, 50, 1]),
         ]
 
-        # initialize omnisynth instance
-        self.omni_instance = omni.Omni()
+        self.logger.log('Initializing OmniSythn instance...')
 
+        # sm.omni_instance = None
+
+        self.logger.log('Compiling synthdefs...')
         # Compile all synthDefs and select first patch
         sc_main = OMNISYNTH_PATH + "main.scd"
         subprocess.Popen(["sclang", sc_main])
         # compiles all synthDefs.
-        self.omni_instance.sc_compile("patches", OMNISYNTH_PATH)
+        sm.omni_instance.sc_compile("patches", OMNISYNTH_PATH)
         # selects first patch.
-        self.omni_instance.synth_sel("tone1", OMNISYNTH_PATH)
+        sm.omni_instance.synth_sel("tone1", OMNISYNTH_PATH)
 
+        # import pdb
+        # pdb.set_trace()
+        self.logger.log('Building patch and pattern matrices...')
         # initialize SCDMatrix classes for patches and patterns
-        self.patch_matrix = SCDMatrix(SCDType.patch).get_matrix()
-        self.patch_list = np.array(self.patch_matrix).flatten()
-        self.pattern_matrix = SCDMatrix(SCDType.pattern).get_matrix()
-        self.pattern_list = np.array(self.pattern_matrix).flatten()
+        sm.patch_matrix = SCDMatrix(SCDType.patch).get_matrix()
+        sm.patch_list = np.array(sm.patch_matrix).flatten()
+        sm.pattern_matrix = SCDMatrix(SCDType.pattern).get_matrix()
+        sm.pattern_list = np.array(sm.pattern_matrix).flatten()
 
-        # initialize screen manager
-        sm = ScreenManager(transition=NoTransition())
-        sm.add_widget(boot_screen)
+        sm.logger = self.logger
 
+        # self.logger.log('Setting current screen manager screen to boot_screen')
+        # sm.current = 'boot_screen'
+
+        sm.add_widget(BootScreen(name="boot_screen"))
+        sm.add_widget(MainScreen(name="main_screen"))
+        sm.current = "boot_screen"
         return sm
 
     def build_config(self, config):
@@ -85,3 +126,19 @@ class OmniApp(App):
 
     def on_config_change(self, config, section, key, value):
         print(config, section, key, value)
+
+    def __init_kivy_components(self):
+        app_path = os.getcwd()
+
+        screen_widgets = Path('omniapp/screens').rglob('*.kv')
+        for screen_path in screen_widgets:
+            self.logger.log('Adding screen ' + str(screen_path) + '...')
+            Builder.load_file(app_path + '/' + str(screen_path))
+        for widget_path in Path('omniapp/components').rglob('*.kv'):
+            self.logger.log('Building asset ' + str(widget_path) + '...')
+            Builder.load_file(
+                app_path + '/' + str(widget_path))
+
+    def __init_kivy_config(self):
+        Config.set('kivy', 'keyboard_mode', 'system')
+        Config.set('postproc', 'double_tap_time', '800')

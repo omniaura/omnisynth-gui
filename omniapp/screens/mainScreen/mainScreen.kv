@@ -1,8 +1,5 @@
 #:kivy 2.0.0
-#:include ../buttons/upButton.kv
-#:include ../buttons/downButton.kv
-<MainScreen@BaseScreen>:
-    name: 'MainScreen'
+<MainScreen>:
     size_hint: 1,1
     AnchorLayout:
         anchor_x: 'left'
@@ -17,12 +14,12 @@
                 id: Patch_selection
                 text: 'Synth Patch Selection'
                 size_hint: 1, 0.25
-                on_release: root.manager.current = 'PatchPage1'
+                on_release: root.manager.current = 'patch_screen_1'
             Button:
                 id: Pattern_selection
                 text: 'LED Pattern Selection'
                 size_hint: 1, 0.25
-                on_release: root.manager.current = 'LedPage1'
+                on_release: root.manager.current = 'led_screen_1'
             Button:
                 id: SettingsBtn
                 text: 'Settings'

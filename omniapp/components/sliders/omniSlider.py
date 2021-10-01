@@ -18,6 +18,6 @@ class OmniSlider(Slider):
             self.hold_value = max(0, min(self.hold_value, 127))
             self.value = self.hold_value
             if self.slider_name in KnobCoords:
-                self.prev_val = App.get_running_app(
-                ).omni.knob_table[KnobCoords[self.slider_name]]
-                App.get_running_app().omni_instance.filter_sel(self.slider_name, self.value)
+                self.prev_val = self.manager.omni_instance.knob_table[KnobCoords[self.slider_name]]
+                self.manager.omni_instance.filter_sel(
+                    self.slider_name, self.value)

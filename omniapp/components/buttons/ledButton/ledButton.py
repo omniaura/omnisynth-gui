@@ -1,4 +1,3 @@
-from omniapp import OmniSynth
 from kivy.uix.button import Button
 
 from constants import OMNISYNTH_PATH
@@ -13,7 +12,7 @@ class LedButton(Button):
         if self.collide_point(*touch.pos):
             self.background_color = [0, 85, 255, 1]
             pattern_action = 'stop' if self.active else 'start'
-            App.get_running_app().omni_instance.pattern_sel(
+            self.manager.omni_instance.pattern_sel(
                 self.text, pattern_action, OMNISYNTH_PATH)
             self.active = not self.active
 

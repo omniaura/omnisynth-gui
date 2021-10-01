@@ -1,5 +1,4 @@
 # Defining all the screens for ScreenManager
-from main import BaseScreen
 from components.buttons.SlideButton import SlideButton
 from components.sliders.omniSlider import OmniSlider
 from components.images.indicatorImage import IndicatorImage
@@ -10,11 +9,12 @@ from kivy.clock import Clock
 from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.relativelayout import RelativeLayout
+from kivy.uix.screenmanager import Screen
 
 # The knob value page
 
 
-class KnobValScreen(BaseScreen):
+class KnobValScreen(Screen):
     def __init__(self):
         super().__init__()
         # # self.slideList = []
@@ -80,13 +80,13 @@ class KnobValScreen(BaseScreen):
         # release_knob_set.add_widget(release_indicator)
 
         # self.add_widget(self.layout)
-        App.get_running_app().omni_instance.firstTime = False
+        self.manager.omni_instance.firstTime = False
 
     def slideUpdate(self):
         for x in self.layout.children:
             if x.slider_name in KnobCoords:
-                current_val = App.get_running_app(
-                ).omni_instance.knob_table[KnobCoords[x.slider_name]]
+                current_val = self.manager.omni_instance.omni_instance.knob_table[
+                    KnobCoords[x.slider_name]]
     # If the last value recorded by the gui slider movement event is different from the current value,
     # x.value should be set to current_val.
     # However, if the user moves the physical slider/knob and then attempts to set it back to that exact
@@ -101,16 +101,16 @@ class KnobValScreen(BaseScreen):
 
     def on_enter(self):
         self.slideEvent = Clock.schedule_interval(self.slideUpdate, 1/60)
-        App.get_running_app().omni_instance.midi_learn_on = True
-        App.get_running_app().omni_instance.mapMode = False
+        self.manager.omni_instance.midi_learn_on = True
+        self.manager.omni_instance.mapMode = False
 
     def on_pre_leave(self):
         self.slideEvent.cancel()
-        App.get_running_app().omni_instance.midi_learn_on = False
-        App.get_running_app().omni_instance.mapMode = False
+        self.manager.omni_instance.midi_learn_on = False
+        self.manager.omni_instance.mapMode = False
 
     def learnMidi(self):
-        if App.get_running_app().omni_instance.mapMode:
-            App.get_running_app().omni_instance.mapMode = False
+        if self.manager.omni_instance.mapMode:
+            self.manager.omni_instance.mapMode = False
         else:
-            App.get_running_app().omni_instance.mapMode = True
+            self.manager.omni_instance.mapMode = True

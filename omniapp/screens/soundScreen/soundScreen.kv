@@ -1,5 +1,5 @@
 #:kivy 2.0.0
-<SoundScreen@BaseScreen>:
+<SoundScreen@Screen>:
     Label:
         text: 'Patch Selection\n       Page ' + str(self.page_number)
         size_hint: 1, 0.13
@@ -8,4 +8,4 @@
         text: 'Back'
         size_hint: 0.08, 0.08
         pos_hint: {'x':0.01, 'top':0.97}
-        on_release: root.manager.current = 'MainGUI'
+        on_release: root.manager.current = 'MainScreen'

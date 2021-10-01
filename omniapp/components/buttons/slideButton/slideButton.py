@@ -1,4 +1,3 @@
-from omniapp import KnobCoords, OmniSynth
 from kivy.uix.button import Button
 
 
@@ -11,14 +10,15 @@ class SlideButton(Button):
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos):
             self.background_color = [0, 85, 255, 1]
-            if App.get_running_app().omni_instance.mapMode:
-                if len(App.get_running_app().omni_instance.knob_table) != 0:
+            if self.manager.omni_instance.mapMode:
+                if len(self.manager.omni_instance.knob_table) != 0:
                     with self.canvas:
                         self.opacity = 1
-                    src = App.get_running_app().omni_instance.control_evnt[2]
-                    chan = App.get_running_app().omni_instance.control_evnt[3]
-                    KnobCoords[self.button_name] = (src, chan)
-                    App.get_running_app().omni_instance.map_knob((src, chan), self.button_name)
+                    src = self.manager.omni_instance.control_evnt[2]
+                    chan = self.manager.omni_instance.control_evnt[3]
+                    self.manager.knob_coords[self.button_name] = (src, chan)
+                    self.manager.omni_instance.map_knob(
+                        (src, chan), self.button_name)
 
     def on_touch_up(self, touch):
         if self.collide_point(*touch.pos):
