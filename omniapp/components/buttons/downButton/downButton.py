@@ -5,9 +5,6 @@ from constants import OMNISYNTH_PATH
 
 class DownButton(Button):
     def on_release(self):
-        self.moveDown()
-
-    def moveDown(self):
         if self.manager.omni_instance.patchIndex != (self.manager.omni_instance.numPatch-1):
             self.manager.slots[0].text = str(
                 self.manager.patch_list[self.manager.omni_instance.patchIndex])

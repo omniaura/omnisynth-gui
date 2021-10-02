@@ -11,10 +11,10 @@ class BootScreen(Screen):
     # we boot into the GUI.
 
     def on_enter(self):
-        Clock.schedule_once(self.changeToMain, 10)
+        Clock.schedule_once(self.changeToMain, 5)
 
     def changeToMain(self, dt):
         self.manager.logger.log(
             'Setting current screen manager screen to main_screen')
-        print(self.manager)
+
         self.manager.current = 'main_screen'

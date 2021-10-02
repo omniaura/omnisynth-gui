@@ -1,5 +1,5 @@
 import subprocess
-from omniapp.constants import OMNISYNTH_PATH
+from omniapp.constants import OMNISYNTH_PATH, SC_PROCESS_NAME, SC_SYNTH_PROCESS_NAME
 
 from kivy.app import App
 from kivy.lang.builder import Builder
@@ -23,6 +23,7 @@ from pathlib import Path
 from itertools import chain
 import os
 import datetime
+import psutil
 
 
 class Omni(ScreenManager):
@@ -43,6 +44,22 @@ class Omni(ScreenManager):
         super().__init__()
 
         self.omni_instance = omni.Omni()
+        self.slots = [
+            Label(size_hint=[1, 0.33], color=[1, 1, 50, 1]),
+            Label(size_hint=[1, 0.33], color=[0, 85, 255, 1]),
+            Label(size_hint=[1, 0.33], color=[1, 1, 50, 1]),
+        ]
+
+    def exit_app(self):
+        process_names = [
+            SC_PROCESS_NAME,
+            SC_SYNTH_PROCESS_NAME
+        ]
+        for proc in psutil.process_iter():
+            if proc.name() in process_names:
+                proc.kill()
+
+        exit()
 
 
 class OmniApp(App):
@@ -73,16 +90,7 @@ class OmniApp(App):
         self.logger.log('Initializing screen manager...')
         sm = Omni(transition=NoTransition())
 
-        self.logger.log('Initializing slot labels...')
-        sm.slots = [
-            Label(size_hint=[1, 0.33], color=[1, 1, 50, 1]),
-            Label(size_hint=[1, 0.33], color=[0, 85, 255, 1]),
-            Label(size_hint=[1, 0.33], color=[1, 1, 50, 1]),
-        ]
-
         self.logger.log('Initializing OmniSythn instance...')
-
-        # sm.omni_instance = None
 
         self.logger.log('Compiling synthdefs...')
         # Compile all synthDefs and select first patch
@@ -97,9 +105,11 @@ class OmniApp(App):
         # pdb.set_trace()
         self.logger.log('Building patch and pattern matrices...')
         # initialize SCDMatrix classes for patches and patterns
-        sm.patch_matrix = SCDMatrix(SCDType.patch).get_matrix()
+        sm.patch_matrix = SCDMatrix(
+            SCDType.patch, sm.omni_instance).get_matrix()
         sm.patch_list = np.array(sm.patch_matrix).flatten()
-        sm.pattern_matrix = SCDMatrix(SCDType.pattern).get_matrix()
+        sm.pattern_matrix = SCDMatrix(
+            SCDType.pattern, sm.omni_instance).get_matrix()
         sm.pattern_list = np.array(sm.pattern_matrix).flatten()
 
         sm.logger = self.logger
@@ -123,9 +133,6 @@ class OmniApp(App):
     def build_settings(self, settings):
         settings.add_json_panel(
             'Settings Template', self.config, filename=OMNISYNTH_PATH + '/gui/settings.json')
-
-    def on_config_change(self, config, section, key, value):
-        print(config, section, key, value)
 
     def __init_kivy_components(self):
         app_path = os.getcwd()

@@ -21,12 +21,24 @@ class SCDMatrix:
     MATRIX_WIDTH = 12
     MATRIX_LENGTH = 4
 
-    def __init__(self, scd_type=SCDType.patch):
+    def __init__(self, scd_type, omni_instance):
         self.scd_type = scd_type
+        self.omni_instance = omni_instance
 
     def get_matrix(self):
-        files = list(filter(is_valid_scd_file,
-                     os.listdir(self.__get_scd_folder())))
+        files = list(map(
+            lambda fname: fname.strip('.scd'),
+            list(filter(is_valid_scd_file,
+                        os.listdir(self.__get_scd_folder())))))
+
+        # dirty dirty dirty
+        if self.scd_type == SCDType.patch:
+            for idx, filename in enumerate(files):
+                self.omni_instance.patchListIndex[filename] = idx
+        else:
+            for idx, filename in enumerate(files):
+                self.omni_instance.patternListIndex[filename] = idx
+
         return [files[i:i+12] for i in range(0, len(files), 12)]
 
     def __get_scd_folder(self):

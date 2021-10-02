@@ -4,7 +4,7 @@ from constants import OMNISYNTH_PATH
 
 
 class UpButton(Button):
-    def move_up(self):
+    def on_release(self):
         if self.manager.omni_instance.patchIndex != 0:
             if self.manager.omni_instance.patchIndex == 1:
                 self.manager.slots[0].text = ''

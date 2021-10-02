@@ -11,17 +11,17 @@
             padding: [1,1,1,1]
             size_hint: 0.5, 0.4
             Button:
-                id: Patch_selection
+                id: patch_selection
                 text: 'Synth Patch Selection'
                 size_hint: 1, 0.25
                 on_release: root.manager.current = 'patch_screen_1'
             Button:
-                id: Pattern_selection
+                id: pattern_selection
                 text: 'LED Pattern Selection'
                 size_hint: 1, 0.25
                 on_release: root.manager.current = 'led_screen_1'
             Button:
-                id: SettingsBtn
+                id: settings_button
                 text: 'Settings'
                 size_hint: 1, 0.25
                 on_release: app.open_settings()
@@ -35,25 +35,25 @@
             Button:
                 text: 'Close Application'
                 size_hint: 1, 0.6
-                on_release: root.exitSel()
+                on_release: root.manager.exit_app()
 
     AnchorLayout:
-        id: 'top-right-corner'
+        id: top_right_corner
         anchor_x: 'right'
         anchoy_y: 'top'
 
         BoxLayout:
-            id: 'patch-select-layout'
+            id: patch_select_layout
             orientation: 'horizontal'
             size_hint: [0.499, 0.395]
 
             BoxLayout:
-                id: 'patch-select-list-layout'
+                id: patch_select_list_layout
                 orientation: 'vertical'
                 size_hint: [0.67, 1]
 
             BoxLayout:
-                id: 'patch-select-interface-layout'
+                id: patch_select_interface_layout
                 orientation: 'vertical'
                 size_hint: [0.23, 1]
 
