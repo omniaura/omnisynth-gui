@@ -1,8 +1,8 @@
 from kivy.uix.gridlayout import GridLayout
 
-from components.buttons.screenNavButton import ScreenNavButton
-from components.toneButton import ToneButton
+from omniapp.components.buttons.toneButton.toneButton import ToneButton
 from kivy.properties import StringProperty, ListProperty, ObjectProperty, NumericProperty
+from kivy.uix.button import Button
 from kivy.uix.screenmanager import Screen
 
 
@@ -24,13 +24,16 @@ class SoundScreen(Screen):
             self.grid.add_widget(ToneButton(
                 text=sound_name, size_hint=[1, 0.25]))
         if self.next_screen != '':
-            self.add_widget(ScreenNavButton(
-                next_screen=self.next_screen, text='>'))
+            self.add_widget(Button(
+                on_release=self.handle_next_button_release(), text='>'))
         if self.prev_screen != '':
-            self.add_widget(ScreenNavButton(
-                next_screen=self.prev_screen, text='<'))
+            self.add_widget(Button(
+                next_screen=self.handle_prev_button_release(), text='<'))
 
         self.add_widget(self.grid)
 
-    def handle_prev_button_release():
-        root.manager.current = self.prev_screen
+    def handle_next_button_release(self):
+        self.manager.current = self.next_screen
+
+    def handle_prev_button_release(self):
+        self.manager.current = self.prev_screen

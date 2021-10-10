@@ -140,7 +140,7 @@ class Tone5Page(Screen):
         self.add_widget(self.layout)
         self.manager.omni_instance.firstTime = False
 
-    def slideUpdate(self):
+    def slide_update(self):
         for x in self.slideList:
             if x.slider_name in KnobCoords:
                 current_val = self.manager.omni_instance[KnobCoords[x.slider_name]]
@@ -157,7 +157,7 @@ class Tone5Page(Screen):
                     x.value = current_val
 
     def on_enter(self):
-        self.slideEvent = Clock.schedule_interval(self.slideUpdate, 1/60)
+        self.slideEvent = Clock.schedule_interval(self.slide_update, 1/60)
         self.manager.omni_instance.midi_learn_on = True
         self.manager.omni_instance.mapMode = False
 

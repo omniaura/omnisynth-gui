@@ -1,6 +1,5 @@
 #:kivy 2.0.0
 <KnobValScreen>:
-    name: 'KnobValScreen'
     Label:
         text: 'Knob Value Page'
         pos_hint: {'x': 0.5 , 'y': 0.9}
@@ -15,7 +14,7 @@
         size_hint_x: 0.1
         size_hint_y: 0.1
         pos_hint: {'x': 0.9, 'y':0}
-        on_release: root.learnMidi()
+        on_release: root.learn_midi()
 
     BoxLayout:
         orientation: 'horizontal'
@@ -28,7 +27,7 @@
 
             OmniSlider:
                 name: 'LPF Slider'
-              
+
             SlideButton:
                 name: 'LPF Button'
 
@@ -38,17 +37,17 @@
 
             OmniSlider:
                 name: 'HPF Slider'
-              
+
             SlideButton:
                 name: 'HPF Button'
-          
+
         ControlGroup:
             id: 'attacklayout'
             name: 'Attack Layout'
 
             OmniSlider:
                 name: 'Attack Slider'
-              
+
             SlideButton:
                 name: 'Attack Button'
 

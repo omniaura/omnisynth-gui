@@ -15,7 +15,9 @@ class MainScreen(Screen):
     def on_pre_enter(self):
         self.manager.omni_instance.numPatch = len(self.manager.patch_list)
 
-        patch_select_list_layout = self.ids.patch_select_list_layout
+        # import pdb
+        # pdb.set_trace()
+        patch_select_list_layout = self.ids['patch_select_list_layout']
         if self.first_time:
             self.manager.omni_instance.patchIndex = 0
             if self.manager.omni_instance.numPatch > 1:

@@ -1,12 +1,10 @@
 from kivy.uix.button import Button
 
 from constants import OMNISYNTH_PATH
-
+from kivy.properties import BooleanProperty, NumericProperty, StringProperty
 
 class LedButton(Button):
-    def __init__(self):
-        super().__init__()
-        self.active = False
+    active = BooleanProperty()
 
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos):
