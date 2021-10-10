@@ -129,9 +129,32 @@ class OmniApp(App):
             if patch_group_count > 1 and screen_number != patch_group_count:
                 next_screen_name = f'patch_screen_{next_screen_number}'
             if screen_number != 1:
-                prev_screen_name = f'patch_screen_{prev_screen_number}' if patch_group_count != 1  else ''
+                prev_screen_name = f'patch_screen_{prev_screen_number}'
 
             screen = SoundScreen(name=screen_name, sound_names=sm.patch_matrix[i], page_number=screen_number, next_screen=next_screen_name, prev_screen=prev_screen_name)
+
+            self.logger.log(f'Adding screen {screen_name}...')
+            sm.add_widget(screen)
+
+            self.logger.log('Adding patch screens...')
+
+        # add pattern screens
+        pattern_group_count = len(sm.pattern_matrix)
+
+        for i in range(pattern_group_count):
+            screen_number = i + 1
+            next_screen_number = screen_number + 1
+            prev_screen_number = i
+
+            screen_name = f'led_screen_{screen_number}'
+            next_screen_name = ''
+            prev_screen_name = ''
+            if pattern_group_count > 1 and screen_number != pattern_group_count:
+                next_screen_name = f'led_screen_{next_screen_number}'
+            if screen_number != 1:
+                prev_screen_name = f'led_screen_{prev_screen_number}'
+
+            screen = SoundScreen(sound_type='Pattern', name=screen_name, sound_names=sm.pattern_matrix[i], page_number=screen_number, next_screen=next_screen_name, prev_screen=prev_screen_name)
 
             self.logger.log(f'Adding screen {screen_name}...')
             sm.add_widget(screen)

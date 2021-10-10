@@ -15,8 +15,6 @@ class MainScreen(Screen):
     def on_pre_enter(self):
         self.manager.omni_instance.numPatch = len(self.manager.patch_list)
 
-        # import pdb
-        # pdb.set_trace()
         patch_select_list_layout = self.ids['patch_select_list_layout']
         if self.first_time:
             self.manager.omni_instance.patchIndex = 0
@@ -55,3 +53,38 @@ class MainScreen(Screen):
                     self.manager.slots[2].text = self.manager.patch_list[self.manager.omni_instance.patchIndex + 1]
                     self.manager.omni_instance.synth_sel(
                         self.manager.slots[1].text, OMNISYNTH_PATH)
+
+    def handle_up_button_release(self):
+        if self.manager.omni_instance.patchIndex != 0:
+            if self.manager.omni_instance.patchIndex == 1:
+                self.manager.slots[0].text = ''
+                self.manager.slots[1].text = str(self.manager.patch_list[0])
+                self.manager.slots[2].text = str(self.manager.patch_list[1])
+                self.manager.omni_instance.patchIndex = 0
+                self.manager.omni_instance.synth_sel(
+                    self.manager.slots[1].text, OMNISYNTH_PATH)
+            else:
+                self.manager.slots[2].text = str(
+                    self.manager.patch_list[self.manager.omni_instance.patchIndex])
+                self.manager.omni_instance.patchIndex -= 1
+                self.manager.slots[1].text = str(
+                    self.manager.patch_list[self.manager.omni_instance.patchIndex])
+                self.manager.slots[0].text = str(
+                    self.manager.patch_list[self.manager.omni_instance.patchIndex - 1])
+                self.manager.omni_instance.synth_sel(
+                    self.manager.slots[1].text, OMNISYNTH_PATH)
+
+    def handle_down_button_release(self):
+        if self.manager.omni_instance.patchIndex != (self.manager.omni_instance.numPatch-1):
+            self.manager.slots[0].text = str(
+                self.manager.patch_list[self.manager.omni_instance.patchIndex])
+            self.manager.omni_instance.patchIndex += 1
+            self.manager.slots[1].text = str(
+                self.manager.patch_list[self.manager.omni_instance.patchIndex])
+            if self.manager.omni_instance.patchIndex+1 != self.manager.omni_instance.numPatch:
+                self.manager.slots[2].text = str(
+                    self.manager.patch_list[self.manager.omni_instance.patchIndex + 1])
+            else:
+                self.manager.slots[2].text = ''
+            self.manager.omni_instance.synth_sel(
+                self.manager.slots[1].text, OMNISYNTH_PATH)
