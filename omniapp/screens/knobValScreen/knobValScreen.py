@@ -1,29 +1,25 @@
-# Defining all the screens for ScreenManager
-# from components.buttons.SlideButton import SlideButton
-# from components.sliders.omniSlider import OmniSlider
-# from components.images.indicatorImage import IndicatorImage
-# from components.images.knobImage import KnobImage
-
 from kivy.clock import Clock
 from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.screenmanager import Screen
+from kivy.properties import ListProperty
 
 # The knob value page
 
 
 class KnobValScreen(Screen):
+    sliders = ListProperty()
+
     def on_pre_enter(self):
         self.manager.omni_instance.firstTime = False
-
-    def slide_update(self, dt):
-        # get all slider widgets
         children = self.walk()
         children_list = list(children)
-        sliders = filter(lambda x: str(type(x)) == "<class 'kivy.factory.OmniSlider'>", children_list)
+        self.sliders = filter(lambda x: str(type(x)) ==
+                              "<class 'kivy.factory.OmniSlider'>", children_list)
 
-        for x in sliders:
+    def slide_update(self, dt):
+        for x in self.sliders:
             if x.name in self.manager.knob_coords:
                 current_val = self.manager.omni_instance.omni_instance.knob_table[
                     self.manager.knob_coords[x.name]]

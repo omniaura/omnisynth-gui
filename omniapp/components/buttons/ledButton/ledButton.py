@@ -5,8 +5,9 @@ from kivy.properties import BooleanProperty, NumericProperty, StringProperty
 
 from kivy.app import App
 
+
 class LedButton(Button):
-    active = BooleanProperty()
+    active = BooleanProperty(True)
 
     def on_touch_down(self, touch):
         omni = App.get_running_app().root.omni_instance

@@ -131,7 +131,8 @@ class OmniApp(App):
             if screen_number != 1:
                 prev_screen_name = f'patch_screen_{prev_screen_number}'
 
-            screen = SoundScreen(name=screen_name, sound_names=sm.patch_matrix[i], page_number=screen_number, next_screen=next_screen_name, prev_screen=prev_screen_name)
+            screen = SoundScreen(
+                name=screen_name, sound_names=sm.patch_matrix[i], page_number=screen_number, next_screen=next_screen_name, prev_screen=prev_screen_name)
 
             self.logger.log(f'Adding screen {screen_name}...')
             sm.add_widget(screen)
@@ -154,7 +155,8 @@ class OmniApp(App):
             if screen_number != 1:
                 prev_screen_name = f'led_screen_{prev_screen_number}'
 
-            screen = SoundScreen(sound_type='Pattern', name=screen_name, sound_names=sm.pattern_matrix[i], page_number=screen_number, next_screen=next_screen_name, prev_screen=prev_screen_name)
+            screen = SoundScreen(sound_type='Pattern', name=screen_name, sound_names=sm.pattern_matrix[
+                                 i], page_number=screen_number, next_screen=next_screen_name, prev_screen=prev_screen_name)
 
             self.logger.log(f'Adding screen {screen_name}...')
             sm.add_widget(screen)
@@ -170,8 +172,9 @@ class OmniApp(App):
             'pathexample': '/some/path'})
 
     def build_settings(self, settings):
+        app_path = os.getcwd()
         settings.add_json_panel(
-            'Settings Template', self.config, filename=OMNISYNTH_PATH + '/gui/settings.json')
+            'Settings Template', self.config, filename=app_path + '\settings.json')
 
     def __init_kivy_components(self):
         app_path = os.getcwd()

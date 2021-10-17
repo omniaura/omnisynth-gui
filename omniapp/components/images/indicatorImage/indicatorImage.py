@@ -9,7 +9,7 @@ class IndicatorImage(Image):
     should_be_updated = BooleanProperty(False)
     hold_value = NumericProperty(0)
 
-    def __init__(self, name):
+    def __init__(self):
         super().__init__()
 
         # When user touches a knob and drags, that one should be updated

@@ -13,7 +13,7 @@
         text: 'Map Mode'
         size_hint_x: 0.1
         size_hint_y: 0.1
-        pos_hint: {'x': 0.9, 'y':0}
+        pos_hint: {'x': 0.875, 'y': 0.05}
         on_release: root.learn_midi()
 
     BoxLayout:
@@ -29,6 +29,7 @@
                 name: 'LPF Slider'
 
             SlideButton:
+                text: 'LPF'
                 name: 'LPF Button'
 
         ControlGroup:
@@ -39,6 +40,7 @@
                 name: 'HPF Slider'
 
             SlideButton:
+                text: 'HPF'
                 name: 'HPF Button'
 
         ControlGroup:
@@ -49,6 +51,7 @@
                 name: 'Attack Slider'
 
             SlideButton:
+                text: 'Attack'
                 name: 'Attack Button'
 
         ControlGroup:
@@ -59,6 +62,7 @@
                 name: 'Decay Slider'
               
             SlideButton:
+                text: 'Decay'
                 name: 'Decay Button'
 
         ControlGroup:
@@ -69,6 +73,7 @@
                 name: 'Sustain Slider'
               
             SlideButton:
+                text: 'Sustain'
                 name: 'Sustain Button'
 
         ControlGroup:
@@ -79,4 +84,5 @@
                 name: 'Release Slider'
               
             SlideButton:
+                text: 'Release'
                 name: 'Release Button'
