@@ -46,7 +46,12 @@
             id: patch_select_layout
             orientation: 'horizontal'
             size_hint: [0.499, 0.395]
-            
+
+            BoxLayout:
+                id: patch_select_list_layout
+                orientation: 'vertical'
+                size_hint: [0.67, 1]
+
             BoxLayout:
                 id: patch_select_interface_layout
                 orientation: 'vertical'
@@ -59,8 +64,3 @@
                 Button:
                     text: 'Down'
                     on_release: root.handle_down_button_release()
-
-            BoxLayout:
-                id: patch_select_list_layout
-                orientation: 'vertical'
-                size_hint: [0.67, 1]
