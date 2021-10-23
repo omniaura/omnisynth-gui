@@ -15,10 +15,7 @@ class ToneButton(Button):
                 self.text]
             self.background_color = [0, 85, 255, 1]
             if touch.is_double_tap:
-                if self.text == 'tone5':
-                    app.root.current = 'Tone5Page'
-                else:
-                    app.root.current = 'knob_val_screen'
+                app.root.current = 'knob_val_screen'
 
     def on_touch_up(self, touch):
         if self.collide_point(*touch.pos):
