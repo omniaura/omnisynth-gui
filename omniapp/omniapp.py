@@ -97,6 +97,7 @@ class OmniApp(App):
         subprocess.Popen(["sclang", sc_main])
         sm.omni_instance.sc_compile("patches", OMNISYNTH_PATH)
         sm.omni_instance.synth_sel("tone1", OMNISYNTH_PATH)
+        Clock.schedule_interval(sm.omni_instance.open_stream, 0.033)
 
         self.logger.log('Building patch and pattern matrices...')
         sm.patch_matrix = SCDMatrix(
@@ -161,6 +162,7 @@ class OmniApp(App):
             self.logger.log(f'Adding screen {screen_name}...')
             sm.add_widget(screen)
         sm.current = "boot_screen"
+
         return sm
 
     def build_config(self, config):
@@ -179,15 +181,12 @@ class OmniApp(App):
     def __init_kivy_components(self):
         app_path = os.getcwd()
 
-        screen_widgets = Path('omniapp/screens').rglob('*.kv')
-        for screen_path in screen_widgets:
-            self.logger.log('Adding screen ' + str(screen_path) + '...')
-            Builder.load_file(app_path + '/' + str(screen_path))
-
-        for widget_path in Path('omniapp/components').rglob('*.kv'):
-            self.logger.log('Building asset ' + str(widget_path) + '...')
-            Builder.load_file(
-                app_path + '/' + str(widget_path))
+        asset_directories = ['omniapp/screens', 'omniapp/components']
+        for asset_directory in asset_directories:
+            for asset_path in Path(asset_directory).rglob('*.kv'):
+                self.logger.log('Building asset ' + str(asset_path) + '...')
+                Builder.load_file(
+                    app_path + '/' + str(asset_path))
 
     def __init_kivy_config(self):
         Config.set('kivy', 'keyboard_mode', 'system')

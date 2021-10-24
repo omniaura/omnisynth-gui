@@ -4,6 +4,13 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.screenmanager import Screen
 from kivy.properties import ListProperty
+from . components.omniSlider.omniSlider import OmniSlider
+from . components.slideButton.slideButton import SlideButton
+from omniapp.components.layouts.controlGroup.controlGroup import ControlGroup
+
+DEFAULT_CONTROL_GROUPS = [
+    'LPF', 'HPF', 'Attack', 'Decay', 'Sustain', 'Release',
+]
 
 # The knob value page
 
@@ -12,17 +19,34 @@ class KnobValScreen(Screen):
     sliders = ListProperty()
 
     def on_pre_enter(self):
+        page_layout = BoxLayout(
+            size_hint_y=0.75, pos_hint={'x': 0, 'y': 0.25}, orientation='horizontal')
+
+        self.manager.logger.log('Current patches and their params (dict):')
+        for k, v in self.manager.omni_instance.sc.patch_param_table.items():
+            self.manager.logger.log(
+                f'(Synth, param num): ${v}; [param_name, default_value]: ${v}')
+        # Screen is a group of ControlGroups.
+        #
+        # Add our default control groups
+        for knob_name in DEFAULT_CONTROL_GROUPS:
+            slider = OmniSlider(knob_name=knob_name)
+            button = SlideButton(text=knob_name)
+            control_group = ControlGroup()
+            control_group.add_widget(slider)
+            control_group.add_widget(button)
+            page_layout.add_widget(control_group)
+            self.sliders.append(slider)
+
+        self.add_widget(page_layout)
+
         self.manager.omni_instance.firstTime = False
-        children = self.walk()
-        children_list = list(children)
-        self.sliders = filter(lambda x: str(type(x)) ==
-                              "<class 'kivy.factory.OmniSlider'>", children_list)
 
     def slide_update(self, dt):
         for x in self.sliders:
-            if x.name in self.manager.knob_coords:
+            if x.knob_name in self.manager.knob_coords:
                 current_val = self.manager.omni_instance.omni_instance.knob_table[
-                    self.manager.knob_coords[x.name]]
+                    self.manager.knob_coords[x.knob_name]]
     # If the last value recorded by the gui slider movement event is different from the current value,
     # x.value should be set to current_val.
     # However, if the user moves the physical slider/knob and then attempts to set it back to that exact
@@ -46,7 +70,6 @@ class KnobValScreen(Screen):
         self.manager.omni_instance.mapMode = False
 
     def learn_midi(self):
-        if self.manager.omni_instance.mapMode:
-            self.manager.omni_instance.mapMode = False
-        else:
-            self.manager.omni_instance.mapMode = True
+        new_map_mode_value = not self.manager.omni_instance.mapMode
+        self.manager.omni_instance.mapMode = new_map_mode_value
+        self.text = str(new_map_mode_value)

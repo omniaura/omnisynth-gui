@@ -5,6 +5,8 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.anchorlayout import AnchorLayout
 from kivy.uix.screenmanager import Screen
 from kivy.properties import BooleanProperty
+from kivy.lang import Builder
+import os
 
 # The main, landing screen of the app
 
