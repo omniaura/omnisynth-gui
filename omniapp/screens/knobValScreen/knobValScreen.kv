@@ -1,0 +1,17 @@
+#:kivy 2.0.0
+<KnobValScreen>:
+    Label:
+        text: 'Knob Value Page'
+        pos_hint: {'x': 0.5 , 'y': 0.9}
+    Button:
+        text: 'Back'
+        size_hint_x: 0.1
+        size_hint_y: 0.1
+        pos_hint: {'x': 0.025, 'y': 0.05}
+        on_release: root.manager.current = 'main_screen'
+    Button:
+        text: 'Map Mode'
+        size_hint_x: 0.1
+        size_hint_y: 0.1
+        pos_hint: {'x': 0.875, 'y': 0.05}
+        on_release: root.learn_midi()

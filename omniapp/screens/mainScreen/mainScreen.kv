@@ -1,0 +1,66 @@
+#:kivy 2.0.0
+<MainScreen>:
+    size_hint: 1,1
+    AnchorLayout:
+        anchor_x: 'left'
+        anchor_y: 'top'
+
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: 2
+            padding: [1,1,1,1]
+            size_hint: 0.5, 0.4
+            Button:
+                id: patch_selection
+                text: 'Synth Patch Selection'
+                size_hint: 1, 0.25
+                on_release: root.manager.current = 'patch_screen_1'
+            Button:
+                id: pattern_selection
+                text: 'MIDI Pattern Selection'
+                size_hint: 1, 0.25
+                on_release: root.manager.current = 'led_screen_1'
+            Button:
+                id: settings_button
+                text: 'Settings'
+                size_hint: 1, 0.25
+                on_release: app.open_settings()
+
+    AnchorLayout:
+        anchor_x: 'center'
+        anchor_y: 'bottom'
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint: 1, 0.6
+            Button:
+                text: 'Close Application'
+                size_hint: 1, 0.6
+                on_release: root.manager.exit_app()
+
+    AnchorLayout:
+        id: top_right_corner
+        anchor_x: 'right'
+        anchor_y: 'top'
+
+        BoxLayout:
+            id: patch_select_layout
+            orientation: 'horizontal'
+            size_hint: [0.499, 0.395]
+
+            BoxLayout:
+                id: patch_select_list_layout
+                orientation: 'vertical'
+                size_hint: [0.67, 1]
+
+            BoxLayout:
+                id: patch_select_interface_layout
+                orientation: 'vertical'
+                size_hint: [0.23, 1]
+
+                Button:
+                    text: 'Up'
+                    on_release: root.handle_up_button_release()
+
+                Button:
+                    text: 'Down'
+                    on_release: root.handle_down_button_release()
