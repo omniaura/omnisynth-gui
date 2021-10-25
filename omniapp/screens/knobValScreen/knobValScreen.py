@@ -7,10 +7,7 @@ from kivy.properties import ListProperty
 from . components.omniSlider.omniSlider import OmniSlider
 from . components.slideButton.slideButton import SlideButton
 from omniapp.components.layouts.controlGroup.controlGroup import ControlGroup
-
-DEFAULT_CONTROL_GROUPS = [
-    'lpf', 'hpf', 'attack', 'decay', 'sustain', 'release',
-]
+import functools
 
 # The knob value page
 
@@ -22,10 +19,16 @@ class KnobValScreen(Screen):
         page_layout = BoxLayout(
             size_hint_y=0.75, pos_hint={'x': 0, 'y': 0.25}, orientation='horizontal')
 
-        # Screen is a group of ControlGroups.
-        #
-        # Add our default control groups
-        for knob_name in DEFAULT_CONTROL_GROUPS:
+        # fetch our current patch params so we build the right knobs
+        current_patch_name = self.manager.patch_list[self.manager.omni_instance.patchIndex]
+        pp_table = self.manager.patch_param_table
+        current_patch_params = list(map(lambda key: pp_table[key][0], filter(
+            lambda key: key[0] == current_patch_name, pp_table
+        )))
+
+        # Screen is a group of ControlGroups, which are groups of controls (aka knobs)
+        # so lets add our knobs from the current patch params we got earlier
+        for knob_name in current_patch_params:
             slider = OmniSlider(knob_name=knob_name)
             button = SlideButton(text=knob_name)
             control_group = ControlGroup()
@@ -37,6 +40,10 @@ class KnobValScreen(Screen):
         self.add_widget(page_layout)
 
         self.manager.omni_instance.firstTime = False
+
+    # Get patch params from a patch param name
+    def get_patch_params(self):
+        self.manager.patch_list[self.manager.omni_instance.patchIndex]
 
     def slide_update(self, dt):
         for x in self.sliders:

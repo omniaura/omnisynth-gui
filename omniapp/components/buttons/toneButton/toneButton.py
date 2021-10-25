@@ -5,6 +5,7 @@ from omniapp.constants import OMNISYNTH_PATH
 
 from kivy.app import App
 
+
 class ToneButton(Button):
     def on_touch_down(self, touch):
         app = App.get_running_app()
