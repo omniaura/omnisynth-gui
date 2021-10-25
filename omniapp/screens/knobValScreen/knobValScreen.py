@@ -9,7 +9,7 @@ from . components.slideButton.slideButton import SlideButton
 from omniapp.components.layouts.controlGroup.controlGroup import ControlGroup
 
 DEFAULT_CONTROL_GROUPS = [
-    'LPF', 'HPF', 'Attack', 'Decay', 'Sustain', 'Release',
+    'lpf', 'hpf', 'attack', 'decay', 'sustain', 'release',
 ]
 
 # The knob value page
