@@ -7,7 +7,6 @@ from kivy.properties import ListProperty
 from . components.omniSlider.omniSlider import OmniSlider
 from . components.slideButton.slideButton import SlideButton
 from omniapp.components.layouts.controlGroup.controlGroup import ControlGroup
-import functools
 
 # The knob value page
 
@@ -40,10 +39,6 @@ class KnobValScreen(Screen):
         self.add_widget(page_layout)
 
         self.manager.omni_instance.firstTime = False
-
-    # Get patch params from a patch param name
-    def get_patch_params(self):
-        self.manager.patch_list[self.manager.omni_instance.patchIndex]
 
     def slide_update(self, dt):
         for x in self.sliders:
