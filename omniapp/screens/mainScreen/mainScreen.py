@@ -7,6 +7,7 @@ from kivy.uix.screenmanager import Screen
 from kivy.properties import BooleanProperty
 from kivy.lang import Builder
 import os
+import time
 
 # The main, landing screen of the app
 
@@ -16,7 +17,6 @@ class MainScreen(Screen):
 
     def on_pre_enter(self):
         self.manager.omni_instance.numPatch = len(self.manager.patch_list)
-
         patch_select_list_layout = self.ids['patch_select_list_layout']
         if self.first_time:
             self.manager.omni_instance.patchIndex = 0

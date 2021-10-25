@@ -4,14 +4,10 @@ from kivy.uix.screenmanager import Screen
 
 class BootScreen(Screen):
     """The screen that is shown on boot"""
-    # Right now, we just wait half a second
-    # and switch to the main screen;
-    # however, we can extend this in the future
-    # to support pre-loading any assets we need before
-    # we boot into the GUI.
+    # Screen that is shown while we load assets
 
     def on_enter(self):
-        Clock.schedule_once(self.change_to_main, 5)
+        Clock.schedule_once(self.change_to_main, 10)
 
     def change_to_main(self, dt):
         self.manager.logger.log(

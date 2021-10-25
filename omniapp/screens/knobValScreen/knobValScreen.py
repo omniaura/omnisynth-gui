@@ -22,10 +22,6 @@ class KnobValScreen(Screen):
         page_layout = BoxLayout(
             size_hint_y=0.75, pos_hint={'x': 0, 'y': 0.25}, orientation='horizontal')
 
-        self.manager.logger.log('Current patches and their params (dict):')
-        for k, v in self.manager.omni_instance.sc.patch_param_table.items():
-            self.manager.logger.log(
-                f'(Synth, param num): ${v}; [param_name, default_value]: ${v}')
         # Screen is a group of ControlGroups.
         #
         # Add our default control groups
@@ -45,7 +41,7 @@ class KnobValScreen(Screen):
     def slide_update(self, dt):
         for x in self.sliders:
             if x.knob_name in self.manager.knob_coords:
-                current_val = self.manager.omni_instance.omni_instance.knob_table[
+                current_val = self.manager.omni_instance.knob_table[
                     self.manager.knob_coords[x.knob_name]]
     # If the last value recorded by the gui slider movement event is different from the current value,
     # x.value should be set to current_val.
@@ -54,7 +50,7 @@ class KnobValScreen(Screen):
     # This is why the "and not x.updateSliderOn" must be added
     #            if x.prev_val != current_val:
     #                x.value = current_val
-                if x.prev_val != current_val and not x.update_slider_on:
+                if x.prev_value != current_val and not x.update_slider_on:
                     x.update_slider_on = True
                 if x.update_slider_on:
                     x.value = current_val

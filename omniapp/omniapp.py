@@ -34,6 +34,7 @@ class Omni(ScreenManager):
     """
 
     omni_instance = ObjectProperty()
+    device_table = DictProperty()
     slots = ListProperty()
     knob_coords = DictProperty()
     pattern_matrix = ListProperty()
@@ -44,6 +45,14 @@ class Omni(ScreenManager):
 
     def __init__(self, **kwargs):
         super().__init__()
+
+        process_names = [
+            SC_PROCESS_NAME,
+            SC_SYNTH_PROCESS_NAME
+        ]
+        for proc in psutil.process_iter():
+            if proc.name() in process_names:
+                proc.kill()
 
         self.omni_instance = omni.Omni()
         self.slots = [
@@ -95,9 +104,12 @@ class OmniApp(App):
         self.logger.log('Compiling synthdefs...')
         sc_main = OMNISYNTH_PATH + "main.scd"
         subprocess.Popen(["sclang", sc_main])
+        sm.omni_instance.open_stream
+        Clock.schedule_interval(sm.omni_instance.open_stream, 0.016)
+        Clock.schedule_interval(lambda dt: self.set_device_table(sm), 1)
+
         sm.omni_instance.sc_compile("patches", OMNISYNTH_PATH)
         sm.omni_instance.synth_sel("tone1", OMNISYNTH_PATH)
-        Clock.schedule_interval(sm.omni_instance.open_stream, 0.033)
 
         self.logger.log('Building patch and pattern matrices...')
         sm.patch_matrix = SCDMatrix(
@@ -157,13 +169,16 @@ class OmniApp(App):
                 prev_screen_name = f'led_screen_{prev_screen_number}'
 
             screen = SoundScreen(sound_type='Pattern', name=screen_name, sound_names=sm.pattern_matrix[
-                                 i], page_number=screen_number, next_screen=next_screen_name, prev_screen=prev_screen_name)
+                i], page_number=screen_number, next_screen=next_screen_name, prev_screen=prev_screen_name)
 
             self.logger.log(f'Adding screen {screen_name}...')
             sm.add_widget(screen)
         sm.current = "boot_screen"
 
         return sm
+
+    def set_device_table(self, manager):
+        manager.device_table = manager.omni_instance.sc.out_dev_table
 
     def build_config(self, config):
         config.setdefaults('example', {

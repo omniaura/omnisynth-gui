@@ -23,7 +23,7 @@ class OmniSlider(Slider):
             self.hold_value = max(0, min(self.hold_value, 127))
             self.value = self.hold_value
             if self.knob_name in knob_coords:
-                self.prev_val = omni.knob_table[
+                self.prev_value = omni.knob_table[
                     knob_coords[self.knob_name]]
                 omni.filter_sel(
                     self.knob_name, self.value)

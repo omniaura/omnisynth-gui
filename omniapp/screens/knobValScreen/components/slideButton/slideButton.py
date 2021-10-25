@@ -19,7 +19,7 @@ class SlideButton(Button):
                     with self.canvas:
                         self.opacity = 1
                     src = omni.control_evnt[2]
-                    chan = omni[3]
+                    chan = omni.control_evnt[3]
                     knob_coords[self.text] = (src, chan)
                     omni.map_knob(
                         (src, chan), self.text)
