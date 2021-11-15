@@ -17,7 +17,8 @@ class KnobValScreen(Screen):
 
     def on_pre_enter(self):
         # remove previous knob layout from screen
-        self.remove_widget(self.page_layout)
+        if self.page_layout != None:
+            self.remove_widget(self.page_layout)
  
         # erase previous sliders
         self.sliders = []
