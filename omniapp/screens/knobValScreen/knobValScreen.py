@@ -43,7 +43,7 @@ class KnobValScreen(Screen):
             control_group = ControlGroup()
             control_group.add_widget(slider)
             control_group.add_widget(button)
-            page_layout.add_widget(control_group)
+            self.page_layout.add_widget(control_group)
             self.sliders.append(slider)
 
         # add the knob layout to the screen
