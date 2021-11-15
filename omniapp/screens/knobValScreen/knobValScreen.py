@@ -47,7 +47,7 @@ class KnobValScreen(Screen):
             self.sliders.append(slider)
 
         # add the knob layout to the screen
-        self.add_widget(page_layout)
+        self.add_widget(self.page_layout)
 
         self.manager.omni_instance.firstTime = False
 
