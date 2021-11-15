@@ -41,6 +41,7 @@ class Omni(ScreenManager):
     pattern_list = ListProperty()
     patch_matrix = ListProperty()
     patch_list = ListProperty()
+    patch_param_table = DictProperty()
     logger = ObjectProperty()
 
     def __init__(self, **kwargs):
@@ -106,7 +107,7 @@ class OmniApp(App):
         subprocess.Popen(["sclang", sc_main])
         sm.omni_instance.open_stream
         Clock.schedule_interval(sm.omni_instance.open_stream, 0.016)
-        Clock.schedule_interval(lambda dt: self.set_device_table(sm), 1)
+        Clock.schedule_interval(lambda dt: self.set_attributes_from_sc(sm), 1)
 
         sm.omni_instance.sc_compile("patches", OMNISYNTH_PATH)
         sm.omni_instance.synth_sel("tone1", OMNISYNTH_PATH)
@@ -177,8 +178,15 @@ class OmniApp(App):
 
         return sm
 
+    def set_attributes_from_sc(self, manager):
+        self.set_device_table(manager)
+        self.set_patch_param_table(manager)
+
     def set_device_table(self, manager):
         manager.device_table = manager.omni_instance.sc.out_dev_table
+
+    def set_patch_param_table(self, manager):
+        manager.patch_param_table = manager.omni_instance.sc.patch_param_table
 
     def build_config(self, config):
         config.setdefaults('example', {
