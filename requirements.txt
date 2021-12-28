@@ -1,0 +1,6 @@
+../omnisynth-dev/omnisynth/dist/omnisynth-0.2.0-py3-none-any.whl
+omnisynth
+Kivy==2.0.0
+py-midi
+python-osc
+kivy-garden
