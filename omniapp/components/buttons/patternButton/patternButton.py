@@ -7,7 +7,7 @@ from kivy.app import App
 
 
 class PatternButton(Button):
-    active = BooleanProperty(True)
+    active = BooleanProperty(False)
 
     def on_touch_down(self, touch):
         omni = App.get_running_app().root.omni_instance
