@@ -161,13 +161,13 @@ class OmniApp(App):
             next_screen_number = screen_number + 1
             prev_screen_number = i
 
-            screen_name = f'led_screen_{screen_number}'
+            screen_name = f'pattern_screen_{screen_number}'
             next_screen_name = ''
             prev_screen_name = ''
             if pattern_group_count > 1 and screen_number != pattern_group_count:
-                next_screen_name = f'led_screen_{next_screen_number}'
+                next_screen_name = f'pattern_screen_{next_screen_number}'
             if screen_number != 1:
-                prev_screen_name = f'led_screen_{prev_screen_number}'
+                prev_screen_name = f'pattern_screen_{prev_screen_number}'
 
             screen = SoundScreen(sound_type='Pattern', name=screen_name, sound_names=sm.pattern_matrix[
                 i], page_number=screen_number, next_screen=next_screen_name, prev_screen=prev_screen_name)

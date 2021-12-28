@@ -6,7 +6,7 @@ from kivy.properties import BooleanProperty, NumericProperty, StringProperty
 from kivy.app import App
 
 
-class LedButton(Button):
+class PatternButton(Button):
     active = BooleanProperty(True)
 
     def on_touch_down(self, touch):

@@ -1,7 +1,7 @@
 from kivy.uix.gridlayout import GridLayout
 
 from omniapp.components.buttons.toneButton.toneButton import ToneButton
-from omniapp.components.buttons.ledButton.ledButton import LedButton
+from omniapp.components.buttons.PatternButton.PatternButton import PatternButton
 from kivy.properties import StringProperty, ListProperty, ObjectProperty, NumericProperty
 from kivy.uix.button import Button
 from kivy.uix.screenmanager import Screen
@@ -27,7 +27,7 @@ class SoundScreen(Screen):
                 self.grid.add_widget(ToneButton(
                     text=sound_name, size_hint=[1, 0.25]))
             else:
-                self.grid.add_widget(LedButton(
+                self.grid.add_widget(PatternButton(
                     text=sound_name, size_hint=[1, 0.25]))
         if self.next_screen != '':
             self.add_widget(Button(
