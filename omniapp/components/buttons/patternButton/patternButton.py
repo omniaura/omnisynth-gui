@@ -15,6 +15,8 @@ class PatternButton(Button):
             self.background_color = [0, 85, 255, 1]
             pattern_action = 'stop' if self.active else 'start'
             omni.pattern_sel(
+                self.text, 'compile', OMNISYNTH_PATH)
+            omni.pattern_sel(
                 self.text, pattern_action, OMNISYNTH_PATH)
             self.active = not self.active
 
