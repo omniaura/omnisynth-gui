@@ -26,6 +26,7 @@ from itertools import chain
 import os
 import datetime
 import psutil
+import platform
 
 
 class Omni(ScreenManager):
@@ -103,8 +104,14 @@ class OmniApp(App):
         sm = Omni(transition=NoTransition())
 
         self.logger.log('Compiling synthdefs...')
+
         sc_main = OMNISYNTH_PATH + "main.scd"
-        subprocess.Popen(["sclang", sc_main])
+
+        if platform.system() == 'Darwin':
+            subprocess.Popen(
+                ["/Applications/SuperCollider.app/Contents/MacOS/sclang", sc_main])
+        else:
+            subprocess.Popen(["sclang", sc_main])
         sm.omni_instance.open_stream
         Clock.schedule_interval(sm.omni_instance.open_stream, 0.016)
         Clock.schedule_interval(lambda dt: self.set_attributes_from_sc(sm), 1)
