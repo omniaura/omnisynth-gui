@@ -1,7 +1,7 @@
 from kivy.uix.gridlayout import GridLayout
 
 from omniapp.components.buttons.toneButton.toneButton import ToneButton
-from omniapp.components.buttons.PatternButton.PatternButton import PatternButton
+from omniapp.components.buttons.patternButton.patternButton import PatternButton
 from kivy.properties import StringProperty, ListProperty, ObjectProperty, NumericProperty
 from kivy.uix.button import Button
 from kivy.uix.screenmanager import Screen
