@@ -19,7 +19,7 @@ class KnobValScreen(Screen):
         # remove previous knob layout from screen
         if self.page_layout != None:
             self.remove_widget(self.page_layout)
- 
+
         # erase previous sliders
         self.sliders = []
 
@@ -27,15 +27,11 @@ class KnobValScreen(Screen):
         self.page_layout = BoxLayout(
             size_hint_y=0.75, pos_hint={'x': 0, 'y': 0.25}, orientation='horizontal')
 
-        # fetch our current patch params so we build the right knobs
-        current_patch_name = self.manager.patch_list[self.manager.omni_instance.patchIndex]
-        pp_table = self.manager.patch_param_table
-        current_patch_params = list(map(lambda key: pp_table[key][0], filter(
-            lambda key: key[0] == current_patch_name, pp_table
-        )))
+        current_patch_params = list(
+            self.manager.omni_instance.active_patch().params)
 
         # Screen is a group of ControlGroups, which are groups of controls (aka knobs)
-        # so lets add our knobs from the current patch params we got earlier
+        # so lets add our knobs from our current patch params
 
         for knob_name in current_patch_params:
             slider = OmniSlider(knob_name=knob_name)
@@ -48,8 +44,6 @@ class KnobValScreen(Screen):
 
         # add the knob layout to the screen
         self.add_widget(self.page_layout)
-
-        self.manager.omni_instance.firstTime = False
 
     def slide_update(self, dt):
         for x in self.sliders:

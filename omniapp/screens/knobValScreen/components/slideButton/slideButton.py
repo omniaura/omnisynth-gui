@@ -15,14 +15,12 @@ class SlideButton(Button):
 
             self.background_color = [0, 85, 255, 1]
             if omni.mapMode:
-                if len(omni.knob_table) != 0:
-                    with self.canvas:
-                        self.opacity = 1
-                    src = omni.control_evnt[2]
-                    chan = omni.control_evnt[3]
-                    knob_coords[self.text] = (src, chan)
-                    omni.map_knob(
-                        (src, chan), self.text)
+                with self.canvas:
+                    self.opacity = 1
+                src = omni.control_evnt[2]
+                chan = omni.control_evnt[3]
+                knob_coords[self.text] = (src, chan)
+                omni.map_knob(src, chan, self.text)
 
     def on_touch_up(self, touch):
         if self.collide_point(*touch.pos):

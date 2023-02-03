@@ -29,33 +29,33 @@ import psutil
 import platform
 
 
+def stop_sc_processes():
+    Logger.log(
+        'Stopping currently running Supercollider and ScSynth processes...')
+    process_names = [
+        SC_PROCESS_NAME,
+        SC_SYNTH_PROCESS_NAME
+    ]
+    for proc in psutil.process_iter():
+        if proc.name() in process_names:
+            proc.kill()
+            Logger.log(f'Stopped process {proc.name()}.')
+
+
 class Omni(ScreenManager):
     """A Kivy ScreenManager that has properties
     we need to persist throughout the manager's lifetime.
     """
 
     omni_instance = ObjectProperty()
-    device_table = DictProperty()
     slots = ListProperty()
     knob_coords = DictProperty()
-    pattern_matrix = ListProperty()
-    pattern_list = ListProperty()
-    patch_matrix = ListProperty()
-    patch_list = ListProperty()
-    patch_param_table = DictProperty()
-    logger = ObjectProperty()
 
     def __init__(self, **kwargs):
         super().__init__()
 
-        process_names = [
-            SC_PROCESS_NAME,
-            SC_SYNTH_PROCESS_NAME
-        ]
-        for proc in psutil.process_iter():
-            if proc.name() in process_names:
-                proc.kill()
-
+        stop_sc_processes()
+        Logger.log('Initializing OmniSynth instance...')
         self.omni_instance = omni.Omni()
         self.slots = [
             Label(size_hint=[1, 0.33], color=[1, 1, 50, 1]),
@@ -64,14 +64,7 @@ class Omni(ScreenManager):
         ]
 
     def exit_app(self):
-        process_names = [
-            SC_PROCESS_NAME,
-            SC_SYNTH_PROCESS_NAME
-        ]
-        for proc in psutil.process_iter():
-            if proc.name() in process_names:
-                proc.kill()
-
+        stop_sc_processes()
         exit()
 
 
@@ -81,14 +74,8 @@ class OmniApp(App):
     def __init__(self):
         super().__init__()
 
-        # Initialize logger
-        # TODO: default to :warn,
-        #       but respect flags --debug (debug)
-        #       or --verbose (:everything), etc
-        self.logger = Logger()
-
         # Build KV components
-        self.logger.log('Building .kv assets...')
+        Logger.log('Building .kv assets...')
         self.__init_kivy_components()
 
     def build(self):
@@ -100,10 +87,10 @@ class OmniApp(App):
 
         self.__init_kivy_config()
 
-        self.logger.log('Initializing screen manager...')
+        Logger.log('Initializing screen manager...')
         sm = Omni(transition=NoTransition())
 
-        self.logger.log('Compiling synthdefs...')
+        Logger.log('Compiling synthdefs...')
 
         sc_main = OMNISYNTH_PATH + "main.scd"
 
@@ -116,10 +103,9 @@ class OmniApp(App):
         Clock.schedule_interval(sm.omni_instance.open_stream, 0.016)
         Clock.schedule_interval(lambda dt: self.set_attributes_from_sc(sm), 1)
 
-        sm.omni_instance.sc_compile("patches", OMNISYNTH_PATH)
-        sm.omni_instance.synth_sel("tone1", OMNISYNTH_PATH)
+        sm.omni_instance.set_active_patch("tone1")
 
-        self.logger.log('Building patch and pattern matrices...')
+        Logger.log('Building patch and pattern matrices...')
         sm.patch_matrix = SCDMatrix(
             SCDType.patch, sm.omni_instance).get_matrix()
         sm.patch_list = np.array(sm.patch_matrix).flatten()
@@ -127,17 +113,16 @@ class OmniApp(App):
             SCDType.pattern, sm.omni_instance).get_matrix()
         sm.pattern_list = np.array(sm.pattern_matrix).flatten()
 
-        sm.logger = self.logger
+        sm.logger = Logger
 
-        self.logger.log('Adding main, boot, and knob screens...')
+        Logger.log('Adding main, boot, and knob screens...')
         sm.add_widget(BootScreen(name="boot_screen"))
         sm.add_widget(MainScreen(name="main_screen"))
         sm.add_widget(KnobValScreen(name="knob_val_screen"))
 
-        self.logger.log('Adding patch screens...')
+        Logger.log('Adding patch screens...')
 
-        # add patch screens
-        patch_group_count = len(sm.patch_matrix)
+        patch_count = sm.omni_instance.osc_interface.patches.patch_count()
 
         for i in range(patch_group_count):
             screen_number = i + 1
@@ -155,10 +140,10 @@ class OmniApp(App):
             screen = SoundScreen(
                 name=screen_name, sound_names=sm.patch_matrix[i], page_number=screen_number, next_screen=next_screen_name, prev_screen=prev_screen_name)
 
-            self.logger.log(f'Adding screen {screen_name}...')
+            Logger.log(f'Adding screen {screen_name}...')
             sm.add_widget(screen)
 
-            self.logger.log('Adding patch screens...')
+            Logger.log('Adding patch screens...')
 
         # add pattern screens
         pattern_group_count = len(sm.pattern_matrix)
@@ -179,7 +164,7 @@ class OmniApp(App):
             screen = SoundScreen(sound_type='Pattern', name=screen_name, sound_names=sm.pattern_matrix[
                 i], page_number=screen_number, next_screen=next_screen_name, prev_screen=prev_screen_name)
 
-            self.logger.log(f'Adding screen {screen_name}...')
+            Logger.log(f'Adding screen {screen_name}...')
             sm.add_widget(screen)
         sm.current = "boot_screen"
 
@@ -214,7 +199,7 @@ class OmniApp(App):
         asset_directories = ['omniapp/screens', 'omniapp/components']
         for asset_directory in asset_directories:
             for asset_path in Path(asset_directory).rglob('*.kv'):
-                self.logger.log('Building asset ' + str(asset_path) + '...')
+                Logger.log('Building asset ' + str(asset_path) + '...')
                 Builder.load_file(
                     app_path + '/' + str(asset_path))
 

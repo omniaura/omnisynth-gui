@@ -16,11 +16,7 @@ import time
 class MainScreen(Screen):
     def on_pre_enter(self):
         omni = self.manager.omni_instance
-        omni.numPatch = len(self.manager.patch_list)
         patch_select_list_layout = self.ids['patch_select_list_layout']
-
-        # make sure patch index is initialized, default to 0
-        omni.patchIndex = omni.patchIndex or 0
 
         # call omni#synth_sel on our current patch
         self.__omni_select_patch()

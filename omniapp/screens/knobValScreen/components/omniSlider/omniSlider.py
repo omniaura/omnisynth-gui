@@ -7,7 +7,6 @@ from kivy.app import App
 class OmniSlider(Slider):
     knob_name = StringProperty()
     hold_value = NumericProperty()
-    prev_value = NumericProperty()
     disabled = BooleanProperty()
     update_slider_on = BooleanProperty()
 
@@ -23,7 +22,5 @@ class OmniSlider(Slider):
             self.hold_value = max(0, min(self.hold_value, 127))
             self.value = self.hold_value
             if self.knob_name in knob_coords:
-                self.prev_value = omni.knob_table[
-                    knob_coords[self.knob_name]]
-                omni.filter_sel(
+                omni.set_patch_parameter_value(
                     self.knob_name, self.value)
