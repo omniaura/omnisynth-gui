@@ -8,16 +8,16 @@ from kivy.app import App
 
 class PatternButton(Button):
     active = BooleanProperty(False)
+    pattern_filename = StringProperty()
 
     def on_touch_down(self, touch):
-        omni = App.get_running_app().root.omni_instance
         if self.collide_point(*touch.pos):
+            self.manager.OmniSynth.set_active_pattern(self.patch_filename)
             self.background_color = [0, 85, 255, 1]
-            pattern_action = 'stop' if self.active else 'start'
-            omni.pattern_sel(
-                self.text, 'compile', OMNISYNTH_PATH)
-            omni.pattern_sel(
-                self.text, pattern_action, OMNISYNTH_PATH)
+            if self.active:
+                self.manager.OmniSynth.stop_pattern(self.pattern_filename)
+            else:
+                self.manager.OmniSynth.start_pattern(self.pattern_filename)
             self.active = not self.active
 
     def on_touch_up(self, touch):

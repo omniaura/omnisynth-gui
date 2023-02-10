@@ -28,7 +28,7 @@ class KnobValScreen(Screen):
             size_hint_y=0.75, pos_hint={'x': 0, 'y': 0.25}, orientation='horizontal')
 
         current_patch_params = list(
-            self.manager.omni_instance.active_patch().params)
+            self.manager.OmniSynth.active_patch().params)
 
         # Screen is a group of ControlGroups, which are groups of controls (aka knobs)
         # so lets add our knobs from our current patch params
@@ -47,32 +47,30 @@ class KnobValScreen(Screen):
 
     def slide_update(self, dt):
         for x in self.sliders:
-            if x.knob_name in self.manager.knob_coords:
-                current_val = self.manager.omni_instance.knob_table[
-                    self.manager.knob_coords[x.knob_name]]
-    # If the last value recorded by the gui slider movement event is different from the current value,
-    # x.value should be set to current_val.
-    # However, if the user moves the physical slider/knob and then attempts to set it back to that exact
-    # value once again, the value would not be accurately depicted on the GUI.
-    # This is why the "and not x.updateSliderOn" must be added
-    #            if x.prev_val != current_val:
-    #                x.value = current_val
-                if x.prev_value != current_val and not x.update_slider_on:
-                    x.update_slider_on = True
-                if x.update_slider_on:
-                    x.value = current_val
+            current_val = self.manager.OmniSynth.active_patch(
+            ).get_interpolated_param_value(x.knob_name)
+            # If the last value recorded by the gui slider movement event is different from the current value,
+            # x.value should be set to current_val.
+            # However, if the user moves the physical slider/knob and then attempts to set it back to that exact
+            # value once again, the value would not be accurately depicted on the GUI.
+            # This is why the "and not x.updateSliderOn" must be added
+            #            if x.prev_val != current_val:
+            #                x.value = current_val
+            if x.prev_value != current_val and not x.update_slider_on:
+                x.update_slider_on = True
+            if x.update_slider_on:
+                x.value = current_val
 
     def on_enter(self):
         self.slide_event = Clock.schedule_interval(self.slide_update, 1/60)
-        self.manager.omni_instance.midi_learn_on = True
-        self.manager.omni_instance.mapMode = False
+        self.manager.OmniSynth.midi_learn_on = True
+        self.manager.midi_map_mode_on = False
 
     def on_pre_leave(self):
         self.slide_event.cancel()
-        self.manager.omni_instance.midi_learn_on = False
-        self.manager.omni_instance.mapMode = False
+        self.manager.OmniSynth.midi_learn_on = False
+        self.manager.midi_map_mode_on = False
 
     def learn_midi(self):
-        new_map_mode_value = not self.manager.omni_instance.mapMode
-        self.manager.omni_instance.mapMode = new_map_mode_value
-        self.text = str(new_map_mode_value)
+        self.manager.midi_map_mode_on = not self.manager.midi_map_mode_on
+        self.text = str(self.manager.midi_map_mode_on)
