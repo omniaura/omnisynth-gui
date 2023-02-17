@@ -11,8 +11,9 @@ class BootScreen(Screen):
         Logger.log('Booting Omnisynth...')
         Clock.schedule_once(self.check_boot_status, 0.5)
 
-    def check_boot_status(self):
+    def check_boot_status(self, dt):
+        print(self.manager.OmniSynth.sc_server_booted())
         if self.manager.OmniSynth.sc_server_booted():
             self.manager.current = 'main_screen'
         else:
-            Clock.schedule_once(self.check_boot_status, 0.5)
+            Clock.schedule_once(self.check_boot_status, dt)

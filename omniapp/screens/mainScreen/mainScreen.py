@@ -18,6 +18,9 @@ class MainScreen(Screen):
         omni = self.manager.OmniSynth
         omni.compile_patches("patches", OMNISYNTH_PATH)
 
+        omni.set_active_patch(
+            omni.osc_interface.patch_collection.patches[0].filename)
+
         patch_select_list_layout = self.ids['patch_select_list_layout']
 
         # set slot text
@@ -35,27 +38,30 @@ class MainScreen(Screen):
 
     def active_patch_index(self):
         return next(
-            (idx for idx, patch in enumerate(self.manager.OmniSynth.patch_collection.patches) if patch == self.manager.OmniSynth.active_patch()), -1)
+            (idx for idx, patch in enumerate(self.manager.OmniSynth.osc_interface.patch_collection.patches) if patch == self.manager.OmniSynth.active_patch()), -1)
 
     def handle_up_button_release(self):
         active_index = self.active_patch_index()
         if (active_index > 0):
-            new_patch = self.manager.OmniSynth.patch_collection.patches[active_index - 1]
+            new_patch = self.manager.OmniSynth.osc_interface.patch_collection.patches[
+                active_index - 1]
             self.manager.OmniSynth.set_active_patch(new_patch.filename)
             self.__set_slot_text()
 
-    def handle_up_button_release(self):
+    def handle_down_button_release(self):
         active_index = self.active_patch_index()
-        if (active_index < self.manager.OmniSynth.patch_collection.patch_count()):
-            new_patch = self.manager.OmniSynth.patch_collection.patches[active_index + 1]
+        if (active_index < self.manager.OmniSynth.osc_interface.patch_collection.patch_count() - 1):
+            new_patch = self.manager.OmniSynth.osc_interface.patch_collection.patches[
+                active_index + 1]
+            print(new_patch.filename)
             self.manager.OmniSynth.set_active_patch(new_patch.filename)
             self.__set_slot_text()
 
     def __get_slot_text(self, offset):
         patch_index = self.active_patch_index() + offset
 
-        if patch_index >= 0 and patch_index < self.manager.OmniSynth.patch_collection.patch_count():
-            patch = self.manager.OmniSynth.patch_collection.patches[patch_index]
+        if patch_index >= 0 and patch_index < self.manager.OmniSynth.osc_interface.patch_collection.patch_count():
+            patch = self.manager.OmniSynth.osc_interface.patch_collection.patches[patch_index]
             return patch.name
         else:
             return ''

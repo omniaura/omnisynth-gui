@@ -1,5 +1,4 @@
 import subprocess
-from omniapp.constants import OMNISYNTH_PATH, SC_PROCESS_NAME, SC_SYNTH_PROCESS_NAME
 
 from kivy.app import App
 from kivy.lang.builder import Builder
@@ -41,7 +40,6 @@ class Omni(ScreenManager):
     def __init__(self, **kwargs):
         super().__init__()
 
-        stop_sc_processes()
         Logger.log('Initializing OmniSynth instance...')
         self.OmniSynth = omni.Omni()
         self.slots = [
@@ -79,13 +77,10 @@ class OmniApp(App):
 
         Logger.log('Compiling synthdefs...')
 
-        sm.omni_instance.stop_sc_processes()
-        sm.omni_instance.start_sc_process()
-        sm.omni_instance.open_stream
-        Clock.schedule_interval(sm.omni_instance.open_stream, 0.016)
-
-        sm.omni_instance.set_active_patch(
-            sm.omni_instance.osc_interface.patch_collection.patches[0].filename)
+        sm.OmniSynth.stop_sc_processes()
+        sm.OmniSynth.start_sc_process()
+        sm.OmniSynth.open_stream
+        Clock.schedule_interval(sm.OmniSynth.open_stream, 0.016)
 
         Logger.log('Adding screens...')
         sm.add_widget(BootScreen(name="boot_screen"))
