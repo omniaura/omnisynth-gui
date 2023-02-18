@@ -7,6 +7,7 @@ from kivy.properties import ListProperty, ObjectProperty
 from . components.omniSlider.omniSlider import OmniSlider
 from . components.slideButton.slideButton import SlideButton
 from omniapp.components.layouts.controlGroup.controlGroup import ControlGroup
+from omnisynth import omni
 
 # The knob value page
 
@@ -46,9 +47,12 @@ class KnobValScreen(Screen):
         self.add_widget(self.page_layout)
 
     def slide_update(self, dt):
+        active_patch = self.manager.OmniSynth.active_patch()
         for x in self.sliders:
-            current_val = self.manager.OmniSynth.active_patch(
-            ).get_interpolated_param_value(x.knob_name)
+            # print(f'Value of {x.knob_name}:')
+            # print(active_patch.params[x.knob_name])
+            param_midi_value = int(omni.ValueConverter.to_midi_value(
+                x.knob_name, active_patch.params[x.knob_name]))
             # If the last value recorded by the gui slider movement event is different from the current value,
             # x.value should be set to current_val.
             # However, if the user moves the physical slider/knob and then attempts to set it back to that exact
@@ -56,19 +60,18 @@ class KnobValScreen(Screen):
             # This is why the "and not x.updateSliderOn" must be added
             #            if x.prev_val != current_val:
             #                x.value = current_val
-            if x.prev_value != current_val and not x.update_slider_on:
-                x.update_slider_on = True
-            if x.update_slider_on:
-                x.value = current_val
+            if x.prev_value != param_midi_value:
+                x.prev_value = param_midi_value
+                x.value = param_midi_value
 
     def on_enter(self):
         self.slide_event = Clock.schedule_interval(self.slide_update, 1/60)
-        self.manager.OmniSynth.midi_learn_on = True
+        self.manager.OmniSynth.set_midi_learn(True)
         self.manager.midi_map_mode_on = False
 
     def on_pre_leave(self):
         self.slide_event.cancel()
-        self.manager.OmniSynth.midi_learn_on = False
+        self.manager.OmniSynth.set_midi_learn(False)
         self.manager.midi_map_mode_on = False
 
     def learn_midi(self):
