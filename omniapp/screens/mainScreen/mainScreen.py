@@ -15,15 +15,13 @@ import time
 
 class MainScreen(Screen):
     def on_pre_enter(self):
-        omni = self.manager.omni_instance
-        omni.numPatch = len(self.manager.patch_list)
+        omni = self.manager.OmniSynth
+        omni.compile_patches("patches", OMNISYNTH_PATH)
+
+        omni.set_active_patch(
+            omni.osc_interface.patch_collection.patches[0].filename)
+
         patch_select_list_layout = self.ids['patch_select_list_layout']
-
-        # make sure patch index is initialized, default to 0
-        omni.patchIndex = omni.patchIndex or 0
-
-        # call omni#synth_sel on our current patch
-        self.__omni_select_patch()
 
         # set slot text
         self.__set_slot_text()
@@ -38,36 +36,37 @@ class MainScreen(Screen):
         except WidgetException:
             pass
 
-    def handle_up_button_release(self):
-        if self.manager.omni_instance.patchIndex == 0:
-            return
+    def active_patch_index(self):
+        return next(
+            (idx for idx, patch in enumerate(self.manager.OmniSynth.osc_interface.patch_collection.patches) if patch == self.manager.OmniSynth.active_patch()), -1)
 
-        self.manager.omni_instance.patchIndex -= 1
-        self.__omni_select_patch()
-        self.__set_slot_text()
+    def handle_up_button_release(self):
+        active_index = self.active_patch_index()
+        if (active_index > 0):
+            new_patch = self.manager.OmniSynth.osc_interface.patch_collection.patches[
+                active_index - 1]
+            self.manager.OmniSynth.set_active_patch(new_patch.filename)
+            self.__set_slot_text()
 
     def handle_down_button_release(self):
-        if self.manager.omni_instance.patchIndex == (self.manager.omni_instance.numPatch-1):
-            return
+        active_index = self.active_patch_index()
+        if (active_index < self.manager.OmniSynth.osc_interface.patch_collection.patch_count() - 1):
+            new_patch = self.manager.OmniSynth.osc_interface.patch_collection.patches[
+                active_index + 1]
+            print(new_patch.filename)
+            self.manager.OmniSynth.set_active_patch(new_patch.filename)
+            self.__set_slot_text()
 
-        self.manager.omni_instance.patchIndex += 1
-        self.__omni_select_patch()
-        self.__set_slot_text()
+    def __get_slot_text(self, offset):
+        patch_index = self.active_patch_index() + offset
 
-    def __get_slot_text(self, patch_index):
-        if patch_index >= 0 and patch_index < self.manager.omni_instance.numPatch:
-            return str(self.manager.patch_list[patch_index])
+        if patch_index >= 0 and patch_index < self.manager.OmniSynth.osc_interface.patch_collection.patch_count():
+            patch = self.manager.OmniSynth.osc_interface.patch_collection.patches[patch_index]
+            return patch.name
         else:
             return ''
 
     def __set_slot_text(self):
-        self.manager.slots[0].text = self.__get_slot_text(
-            self.manager.omni_instance.patchIndex - 1)
-        self.manager.slots[1].text = self.__get_slot_text(
-            self.manager.omni_instance.patchIndex)
-        self.manager.slots[2].text = self.__get_slot_text(
-            self.manager.omni_instance.patchIndex + 1)
-
-    def __omni_select_patch(self):
-        self.manager.omni_instance.synth_sel(
-            self.manager.patch_list[self.manager.omni_instance.patchIndex], OMNISYNTH_PATH)
+        self.manager.slots[0].text = self.__get_slot_text(-1)
+        self.manager.slots[1].text = self.__get_slot_text(0)
+        self.manager.slots[2].text = self.__get_slot_text(1)

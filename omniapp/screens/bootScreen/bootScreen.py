@@ -1,6 +1,6 @@
 from kivy.clock import Clock
+from omniapp.logger import Logger
 from kivy.uix.screenmanager import Screen
-from omniapp.constants import OMNISYNTH_PATH
 
 
 class BootScreen(Screen):
@@ -8,17 +8,11 @@ class BootScreen(Screen):
     # Screen that is shown while we load assets
 
     def on_enter(self):
-        # compile patches by calling omni#synth_sel on all patches
-        self.manager.logger.log('Compiling patches...')
+        Logger.log('Booting Omnisynth...')
+        Clock.schedule_once(self.check_boot_status, 0.5)
 
-        for patch_name in self.manager.patch_list:
-            self.manager.omni_instance.synth_sel(
-                str(patch_name), OMNISYNTH_PATH)
-
-        Clock.schedule_once(self.change_to_main, 10)
-
-    def change_to_main(self, dt):
-        self.manager.logger.log(
-            'Setting current screen manager screen to main_screen')
-
-        self.manager.current = 'main_screen'
+    def check_boot_status(self, dt):
+        if self.manager.OmniSynth.sc_server_booted():
+            self.manager.current = 'main_screen'
+        else:
+            Clock.schedule_once(self.check_boot_status, dt)

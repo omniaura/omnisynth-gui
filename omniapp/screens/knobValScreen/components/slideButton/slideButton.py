@@ -8,21 +8,16 @@ from kivy.app import App
 
 class SlideButton(Button):
     def on_touch_down(self, touch):
+        app = App.get_running_app()
         if self.collide_point(*touch.pos):
-            app = App.get_running_app()
-            omni = app.root.omni_instance
-            knob_coords = app.root.knob_coords
-
             self.background_color = [0, 85, 255, 1]
-            if omni.mapMode:
-                if len(omni.knob_table) != 0:
-                    with self.canvas:
-                        self.opacity = 1
-                    src = omni.control_evnt[2]
-                    chan = omni.control_evnt[3]
-                    knob_coords[self.text] = (src, chan)
-                    omni.map_knob(
-                        (src, chan), self.text)
+            if app.root.midi_map_mode_on:
+                with self.canvas:
+                    self.opacity = 1
+                current_control_event = app.root.OmniSynth.current_control_event()
+                if current_control_event[0] is not None:
+                    app.root.OmniSynth.map_knob(
+                        current_control_event[1], current_control_event[2], self.text)
 
     def on_touch_up(self, touch):
         if self.collide_point(*touch.pos):

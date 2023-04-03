@@ -14,7 +14,15 @@ class LogLevel(enum.Enum):
 
 
 class Logger:
-    def log(self, message='', log_method=print):
+    @staticmethod
+    def log(message, log_method=print):
+        """
+        Logs a message with a log method. Log method defaults to print()
+
+        Args:
+            message (str) the message to log.
+            log_method (Function, optional): the log method. Defaults to print.
+        """
         log_message = 'I [' + datetime.datetime.now().isoformat() + \
             ']: ' + message
         log_method(log_message)
