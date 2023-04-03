@@ -1,5 +1,5 @@
 ../omnisynth-dev/omnisynth/dist/omnisynth-0.3.0-py3-none-any.whl
-Kivy==2.0.0
+Kivy
 matplotlib
 py-midi
 python-osc
