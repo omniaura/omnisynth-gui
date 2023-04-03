@@ -1,4 +1,4 @@
-../omnisynth-dev/omnisynth/dist/omnisynth-0.2.7-py3-none-any.whl
+../omnisynth-dev/omnisynth/dist/omnisynth-0.3.0-py3-none-any.whl
 Kivy==2.0.0
 matplotlib
 py-midi
