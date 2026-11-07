@@ -2,6 +2,8 @@
 Kivy
 matplotlib
 Pillow>=13.0.0
+psutil
+six
 py-midi
 python-osc
 kivy-garden

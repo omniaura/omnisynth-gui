@@ -1,5 +1,6 @@
 import subprocess
 import sys
+import sysconfig
 from pathlib import Path
 
 
@@ -18,8 +19,9 @@ def main():
         cwd=root,
         check=True,
     )
-    subprocess.run(["garden", "install", "graph"], cwd=root, check=True)
-    subprocess.run(["garden", "install", "matplotlib"], cwd=root, check=True)
+    garden = Path(sysconfig.get_path("scripts")) / "garden"
+    subprocess.run([sys.executable, str(garden), "install", "graph"], cwd=root, check=True)
+    subprocess.run([sys.executable, str(garden), "install", "matplotlib"], cwd=root, check=True)
 
 
 if __name__ == "__main__":
